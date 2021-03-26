@@ -1,11 +1,11 @@
 package juego;
 
-public class Cartas {
+public class Carta {
 	
 	protected String numero;
 	protected char palo;
 	
-	public Cartas(String numero, char palo) {
+	public Carta(String numero, char palo) {
 		super();
 		this.numero = numero;
 		this.palo = palo;
@@ -21,7 +21,7 @@ public class Cartas {
 
 	@Override
 	public String toString() {
-		return "Cartas [numero=" + numero + ", palo=" + palo + "]";
+		return "Carta [numero=" + numero + ", palo=" + palo + "]";
 	}
 
 }
