@@ -1,6 +1,7 @@
 package juego;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Baraja {
 	protected static ArrayList<Carta> baraja = new ArrayList<Carta>();
@@ -15,17 +16,17 @@ public class Baraja {
 		}
 	}
 	
-	public static void mostrarBaraja() {
+	public static String mostrarBaraja() {
+		String str = "";
 		for (int i = 0; i < baraja.size(); i++) {
-			System.out.println(baraja.get(i).toString());
+			//str += baraja.get(i).toString();
+			str += baraja.get(i).getNumero();
+			str += baraja.get(i).getPalo() + "\n";
 		}
+		return str;
 	}
 	
 	public static void barajar() {
-		for (int i = 0; i < palos.length; ++i) {
-			for (int j = 0; j < numeros.length; ++j) {
-				baraja.add(new Carta(numeros[j], palos[i]));
-			}
-		}
+		Collections.shuffle(baraja);
 	}
 }
