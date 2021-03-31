@@ -2,13 +2,8 @@
 <faceted-project>
   <runtime name="WildFly 22.0 Runtime"/>
   <fixed facet="jst.web"/>
-<<<<<<< HEAD
   <fixed facet="java"/>
   <fixed facet="wst.jsdt.web"/>
-=======
-  <fixed facet="wst.jsdt.web"/>
-  <fixed facet="java"/>
->>>>>>> branch 'master' of https://github.com/DavidRPZ/Poker
   <installed facet="java" version="12"/>
   <installed facet="jst.web" version="4.0"/>
   <installed facet="wst.jsdt.web" version="1.0"/>
