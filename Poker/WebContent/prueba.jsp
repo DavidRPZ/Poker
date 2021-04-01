@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 
 <%@ page session="true"
-	import="java.util.*, juego.Baraja, juego.Carta"%>
+	import="java.util.*, juego.*, bd.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +13,7 @@
 	<%
 	Baraja.crearBaraja();
 	Baraja.barajar();
-	out.println(Baraja.mostrarBaraja());
+	out.println(Baraja.mostrarBaraja());	
 	%>
 </body>
 </html>
