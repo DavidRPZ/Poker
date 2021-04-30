@@ -16,17 +16,25 @@ public class Baraja {
 		}
 	}
 	
-	public static String mostrarBaraja() {
-		String str = "";
-		for (int i = 0; i < baraja.size(); i++) {
-			//str += baraja.get(i).toString();
-			str += baraja.get(i).getNumero();
-			str += baraja.get(i).getPalo() + "\n";
-		}
-		return str;
+	public static Carta repartirCartas() {
+		Carta c1 = baraja.get(0);
+		baraja.remove(0);
+		return c1;
+	}
+	
+	public static String mostrarBaraja(int i) {
+		return baraja.get(i).getNumero() + baraja.get(i).getPalo();
 	}
 	
 	public static void barajar() {
 		Collections.shuffle(baraja);
+	}
+	
+	public static int barajaSize() {
+		return baraja.size();
+	}
+	
+	public static void vaciarBaraja() {
+		baraja.clear();
 	}
 }

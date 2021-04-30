@@ -12,8 +12,11 @@
 <body>
 	<%
 	Baraja.crearBaraja();
-	Baraja.barajar();
-	out.println(Baraja.mostrarBaraja());	
+	//Baraja.barajar();
+	for (int i = 0; i < Baraja.barajaSize(); i++) {
+		out.println("<img src='img/baraja/" + Baraja.mostrarBaraja(i) + ".svg' alt='Carta' width='50px'>");
+	}
+	Baraja.vaciarBaraja();
 	%>
 </body>
 </html>
