@@ -36,13 +36,13 @@ public class ServletControlador extends HttpServlet {
         out.print(jugada + id_jugador + id_sala + apuesta);
         switch (jugada) {
         case "fold":
-        	juego.Juego.fold(apuesta, id_jugador, id_sala);
+        	//juego.Juego.fold(apuesta, id_jugador, id_sala);
         	break;
         case "call":
-        	juego.Juego.call(apuesta, id_jugador, id_sala);
+        	//juego.Juego.call(apuesta, id_jugador, id_sala);
         	break;
         case "raise":
-        	juego.Juego.raise(apuesta, id_jugador, id_sala);
+        	//juego.Juego.raise(apuesta, id_jugador, id_sala);
         	break;
         }
         out.close();

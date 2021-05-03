@@ -30,48 +30,72 @@
             });
         }*/
 
-        $("#fold").click(function () {
-        	var apuesta = "100";
+        function fold() {
+            var apuesta = "100";
             var jugada = "fold"
             var id_jugador = "1";
             var id_sala = "1";
             $.post("ServletControlador", {
-            	apuesta: apuesta,
+                apuesta: apuesta,
                 jugada: jugada,
                 id_jugador: id_jugador,
                 id_sala: id_sala
             }, function (responseText) {
                 $('#div1').html(responseText);
             });
-        });
-        $("#call").click(function () {
-        	var apuesta = "200";
+        }
+
+        function call() {
+            var apuesta = "200";
             var jugada = "call"
             var id_jugador = "2";
             var id_sala = "2";
             $.post("ServletControlador", {
-            	apuesta: apuesta,
+                apuesta: apuesta,
                 jugada: jugada,
                 id_jugador: id_jugador,
                 id_sala: id_sala
             }, function (responseText) {
                 $('#div2').html(responseText);
             });
-        });
-        $("#raise").click(function () {
-        	var apuesta = "300";
+        }
+
+        function raise() {
+            var apuesta = "300";
             var jugada = "raise"
             var id_jugador = "3";
             var id_sala = "3";
             $.post("ServletControlador", {
-            	apuesta: apuesta,
+                apuesta: apuesta,
                 jugada: jugada,
                 id_jugador: id_jugador,
                 id_sala: id_sala
             }, function (responseText) {
                 $('#div3').html(responseText);
             });
+        }
+
+        $("#fold").click(function () {
+            fold();
         });
+        $("#call").click(function () {
+            call();
+        });
+        $("#raise").click(function () {
+            raise();
+        });
+
+        var tiempo = 20;
+
+        setInterval(function () {
+            if (tiempo > -1) {
+                $('#div4').html("Tiempo restante: " + tiempo);
+                tiempo--;
+            } else {
+                fold();
+                tiempo = 20;
+            }
+        }, 1000);
     });
 </script>
 
@@ -85,6 +109,7 @@
     <div id="div1"></div>
     <div id="div2"></div>
     <div id="div3"></div>
+    <div id="div4"></div>
 </body>
 
 </html>
