@@ -25,11 +25,26 @@ public class ServletControlador extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		int apuesta = Integer.parseInt(request.getParameter("apuesta"));
 		String jugada = request.getParameter("jugada");
+		int id_jugador = Integer.parseInt(request.getParameter("id_jugador"));
+		int id_sala = Integer.parseInt(request.getParameter("id_sala"));
+		
 		//response.setContentType("text/html");
         //ServletInputStream in = request.getInputStream();
         PrintWriter out = response.getWriter();
-        out.print("<h1>POSTsdfsfd</h1>" + jugada);
+        out.print(jugada + id_jugador + id_sala + apuesta);
+        switch (jugada) {
+        case "fold":
+        	juego.Juego.fold(apuesta, id_jugador, id_sala);
+        	break;
+        case "call":
+        	juego.Juego.call(apuesta, id_jugador, id_sala);
+        	break;
+        case "raise":
+        	juego.Juego.raise(apuesta, id_jugador, id_sala);
+        	break;
+        }
         out.close();
 	}
 

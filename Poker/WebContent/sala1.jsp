@@ -11,71 +11,80 @@
 
 <script>
     $(document).ready(function () {
-        $("#fold").click(function () {
+        /*setInterval(function () {
+            llamada();
+        }, 500);
+
+        function llamada() {
+            var apuesta = "100";
+            var jugada = "fold"
+            var id_jugador = "1";
+            var id_sala = "1";
             $.post("ServletControlador", {
-                jugada: "fold"
+            	apuesta: apuesta,
+                jugada: jugada,
+                id_jugador: id_jugador,
+                id_sala: id_sala
+            }, function (responseText) {
+                $('#div1').html(responseText);
+            });
+        }*/
+
+        $("#fold").click(function () {
+        	var apuesta = "100";
+            var jugada = "fold"
+            var id_jugador = "1";
+            var id_sala = "1";
+            $.post("ServletControlador", {
+            	apuesta: apuesta,
+                jugada: jugada,
+                id_jugador: id_jugador,
+                id_sala: id_sala
             }, function (responseText) {
                 $('#div1').html(responseText);
             });
         });
         $("#call").click(function () {
+        	var apuesta = "200";
+            var jugada = "call"
+            var id_jugador = "2";
+            var id_sala = "2";
             $.post("ServletControlador", {
-                jugada: "call"
+            	apuesta: apuesta,
+                jugada: jugada,
+                id_jugador: id_jugador,
+                id_sala: id_sala
             }, function (responseText) {
-                $('#div1').html(responseText);
+                $('#div2').html(responseText);
             });
         });
         $("#raise").click(function () {
+        	var apuesta = "300";
+            var jugada = "raise"
+            var id_jugador = "3";
+            var id_sala = "3";
             $.post("ServletControlador", {
-                jugada: "raise"
+            	apuesta: apuesta,
+                jugada: jugada,
+                id_jugador: id_jugador,
+                id_sala: id_sala
             }, function (responseText) {
-                $('#div1').html(responseText);
+                $('#div3').html(responseText);
             });
         });
-
-        /* function ajax() {
-            var req = new XMLHttpRequest();
-
-            req.onreadystatechange = function () {
-                if (req.readyState == 4 && req.status == 200) {
-                    document.getElementById('div1').innerHTML = req.responseText;
-                }
-            }
-
-            req.open('POST', 'servletControlador.java', true);
-            req.send();
-        }
-
-        setInterval(function () {
-            ajax();
-        }, 1000);*/
-
     });
-
-    /* function fold() {
-        var juego = "fold";
-        var peticion = $.ajax({
-            url: "servletControlador.java",
-            type: "POST",
-            async: true, // no es obligario es asincrono por defecto
-            data: { //Variable que vamos a mandar al servidor
-                juego: juego
-            },
-            success: function () { //cuando nos devuelve una respuesta favorable entra en el success
-                $("#div1").html(peticion.responseText);
-            }
-        })
-    }; */
 </script>
 
 <body>
     <form action="" name="jugada" method="POST">
-        <input type="number" id="apuesta" name="apuesta">
+        <input type="text" id="apuesta" name="apuesta">
         <input type="button" id="fold" name="fold" value="fold">
         <input type="button" id="call" name="call" value="call">
         <input type="button" id="raise" name="raise" value="raise">
     </form>
     <div id="div1"></div>
+    <div id="div2"></div>
+    <div id="div3"></div>
 </body>
 
 </html>
