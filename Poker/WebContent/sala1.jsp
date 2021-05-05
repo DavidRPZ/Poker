@@ -105,11 +105,13 @@
         <input type="button" id="fold" name="fold" value="fold">
         <input type="button" id="call" name="call" value="call">
         <input type="button" id="raise" name="raise" value="raise">
+        <input type="button" id="prueba1" name="prueba1" value="Botón de prueba">
     </form>
     <div id="div1"></div>
     <div id="div2"></div>
     <div id="div3"></div>
     <div id="div4"></div>
+    <div id="div5"></div>
 </body>
 
 </html>

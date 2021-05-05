@@ -29,6 +29,7 @@ public class ServletControlador extends HttpServlet {
 		String jugada = request.getParameter("jugada");
 		int id_jugador = Integer.parseInt(request.getParameter("id_jugador"));
 		int id_sala = Integer.parseInt(request.getParameter("id_sala"));
+		//juego.Juego.empezarRonda(id_sala);
 		
 		//response.setContentType("text/html");
         //ServletInputStream in = request.getInputStream();
@@ -37,12 +38,15 @@ public class ServletControlador extends HttpServlet {
         switch (jugada) {
         case "fold":
         	//juego.Juego.fold(apuesta, id_jugador, id_sala);
+        	out.print("<br>Ha elegido fold");
         	break;
         case "call":
         	//juego.Juego.call(apuesta, id_jugador, id_sala);
+        	out.print("<br>Ha elegido call");
         	break;
         case "raise":
         	//juego.Juego.raise(apuesta, id_jugador, id_sala);
+        	out.print("<br>Ha elegido raise");
         	break;
         }
         out.close();
