@@ -33,4 +33,9 @@ public class Chat {
 			sesion.getBasicRemote().sendObject(mensaje);
 		}
 	}
+	
+	public static int numJugadores() {
+		return conectados.size();
+	}
+	
 }

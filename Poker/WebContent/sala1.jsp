@@ -32,7 +32,7 @@
 
         function fold() {
             var apuesta = "100";
-            var jugada = "fold"
+            var jugada = "fold";
             var id_jugador = "1";
             var id_sala = "1";
             $.post("ServletControlador", {
@@ -47,7 +47,7 @@
 
         function call() {
             var apuesta = "200";
-            var jugada = "call"
+            var jugada = "call";
             var id_jugador = "2";
             var id_sala = "2";
             $.post("ServletControlador", {
@@ -62,7 +62,7 @@
 
         function raise() {
             var apuesta = "300";
-            var jugada = "raise"
+            var jugada = "raise";
             var id_jugador = "3";
             var id_sala = "3";
             $.post("ServletControlador", {

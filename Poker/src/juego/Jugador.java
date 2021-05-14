@@ -6,7 +6,7 @@ public class Jugador {
 	protected int id_jugador;
 	protected Carta carta1;
 	protected Carta carta2;
-	protected Boolean ciega_pequeña;
+	protected Boolean ciega_pequena;
 	protected Boolean ciega_grande;
 	protected Boolean activo;
 	protected Boolean ganador;
@@ -20,7 +20,7 @@ public class Jugador {
 		this.id_jugador = id_jugador;
 		this.carta1 = carta1;
 		this.carta2 = carta2;
-		this.ciega_pequeña = ciega_pequeña;
+		this.ciega_pequena = ciega_pequeña;
 		this.ciega_grande = ciega_grande;
 		this.activo = activo;
 		this.ganador = ganador;
@@ -54,11 +54,11 @@ public class Jugador {
 	}
 	
 	public Boolean getCiega_pequeña() {
-		return ciega_pequeña;
+		return ciega_pequena;
 	}
 
 	public void setCiega_pequeña(Boolean ciega_pequeña) {
-		this.ciega_pequeña = ciega_pequeña;
+		this.ciega_pequena = ciega_pequeña;
 	}
 
 	public Boolean getCiega_grande() {

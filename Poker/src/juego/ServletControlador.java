@@ -25,17 +25,29 @@ public class ServletControlador extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		int apuesta = Integer.parseInt(request.getParameter("apuesta"));
-		String jugada = request.getParameter("jugada");
-		int id_jugador = Integer.parseInt(request.getParameter("id_jugador"));
-		int id_sala = Integer.parseInt(request.getParameter("id_sala"));
+		//int apuesta = Integer.parseInt(request.getParameter("apuesta"));
+		//String jugada = request.getParameter("jugada");
+		//int id_jugador = Integer.parseInt(request.getParameter("id_jugador"));
+		//int id_sala = Integer.parseInt(request.getParameter("id_sala"));
 		//juego.Juego.empezarRonda(id_sala);
 		
 		//response.setContentType("text/html");
         //ServletInputStream in = request.getInputStream();
         PrintWriter out = response.getWriter();
-        out.print(jugada + id_jugador + id_sala + apuesta);
-        switch (jugada) {
+        
+        String accion = request.getParameter("accion");
+        int id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
+      	int id_sala = Integer.parseInt(request.getParameter("id_sala"));
+      	//juego.Juego.empezarRonda(id_sala); //Solo lo ejecuta el primer jugador, el "host"
+      	//juego.Juego.crearJugadores(id_usuario, id_sala);
+        switch (accion) {
+        case "nuevoJugador":
+        	out.print(chat.Chat.numJugadores());
+        	break;
+        case "juego":
+        	String cartas = juego.Juego.mostrarCarta1(id_usuario, id_sala) + "/" + juego.Juego.mostrarCarta2(id_usuario, id_sala);
+        	out.print(cartas);
+        	break;
         case "fold":
         	//juego.Juego.fold(apuesta, id_jugador, id_sala);
         	out.print("<br>Ha elegido fold");
@@ -49,6 +61,7 @@ public class ServletControlador extends HttpServlet {
         	out.print("<br>Ha elegido raise");
         	break;
         }
+        
         out.close();
 	}
 
