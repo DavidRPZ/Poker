@@ -8,20 +8,21 @@
 		nombre = document.getElementById('usuario'),
 		mensaje = document.getElementById('mensaje'),
 		pruebas = document.getElementById('pruebas'),
-		pruebaJuego = document.getElementById('pruebaJuego'),
+		flop = document.getElementById('flop'),
 		numJugadores,
-		rondaEmpezada = false;
+		rondaEmpezada = false,
+		esHost = "false",
+		idJugadores = [],
+		nombresJugadores = [];
 
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
 	ws.onmessage = onMessage;
 	boton.addEventListener('click', enviar);
 
-	pruebaJuego.addEventListener('click', juego);
-
 	function onOpen() {
 		console.log('Conectado a WebSocket');
-		nuevoJugador();
+		//nuevoJugador();
 	}
 
 	function onClose() {
@@ -31,8 +32,8 @@
 	function enviar() {
 		var msg = {
 			accion: "chat",
-			id_usuario: "1",
-			id_sala: "1",
+			id_usuario: sessionStorage.getItem("id_usuario"),
+			id_sala: sessionStorage.getItem("id_sala"),
 			nombre: nombre.value,
 			mensaje: mensaje.value
 		};
@@ -52,65 +53,153 @@
 				break;
 
 			case "empezarRonda":
-				var msg = obj.empezarRonda;
-				pruebas.innerHTML += "Empezar ronda: " + msg + "<br>Numero de jugadores: " + numJugadores;
-				rondaEmpezada = true;
+				//var msg = obj.empezarRonda;
+				//pruebas.innerHTML += "Empezar ronda: " + msg + "<br>Numero de jugadores: " + numJugadores;
+				//sleep(40);
+				host();
+				break;
+			case "flop":
+				var msg1 = obj.flop1,
+					msg2 = obj.flop2,
+					msg3 = obj.flop3;
+				flop.innerHTML += "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='50px'><br>";
+				flop.innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='50px'><br>";
+				flop.innerHTML += "<img src='img/baraja/" + msg3 + ".svg' alt='Carta' width='50px'><br>";
+				/*sleep(50);
+				juego();*/
 
-				/*//cambiar esto, es para pruebas:
-				id_usuario = document.getElementById('apuesta');
+				break;
+			case "todosJugadores":
+				//var numJug = Object.keys(obj).length - 1;
+				idJugadores.push(obj.J1);
+				idJugadores.push(obj.J2);
+				nombresJugadores.push(obj.nombre1);
+				nombresJugadores.push(obj.nombre2);
 				
-				var msg = {
-					accion: "juego",
-					id_usuario: id_usuario.value,
-					id_sala: "1",
-					nombre: nombre.value,
-					mensaje: mensaje.value
-				};
-				ws.send(JSON.stringify(msg));*/
+				document.getElementById("J1").innerHTML += "id: " + obj.J1 + ", nombre: " + obj.nombre1 + "<br>";
+				document.getElementById("J2").innerHTML += "id: " + obj.J2 + ", nombre: " + obj.nombre2 + "<br>";
+				if (obj.J3 != undefined) {
+					document.getElementById("J3").innerHTML += "id: " + obj.J3 + ", nombre: " + obj.nombre3 + "<br>";
+					idJugadores.push(obj.J3);
+					nombresJugadores.push(obj.nombre2);
+				}
+				if (obj.J4 != undefined) {
+					document.getElementById("J4").innerHTML += "id: " + obj.J4 + ", nombre: " + obj.nombre4 + "<br>";
+					idJugadores.push(obj.J4);
+					nombresJugadores.push(obj.nombre4);
+				}
+				if (obj.J5 != undefined) {
+					document.getElementById("J5").innerHTML += "id: " + obj.J5 + ", nombre: " + obj.nombre5 + "<br>";
+					idJugadores.push(obj.J5);
+					nombresJugadores.push(obj.nombre5);
+				}
+				if (obj.J6 != undefined) {
+					document.getElementById("J6").innerHTML += "id: " + obj.J6 + ", nombre: " + obj.nombre6 + "<br>";
+					idJugadores.push(obj.J6);
+					nombresJugadores.push(obj.nombre6);
+				}
+				if (obj.J7 != undefined) {
+					document.getElementById("J7").innerHTML += "id: " + obj.J7 + ", nombre: " + obj.nombre7 + "<br>";
+					idJugadores.push(obj.J7);
+					nombresJugadores.push(obj.nombre7);
+				}
+				if (obj.J8 != undefined) {
+					document.getElementById("J8").innerHTML += "id: " + obj.J8 + ", nombre: " + obj.nombre8 + "<br>";
+					idJugadores.push(obj.J8);
+					nombresJugadores.push(obj.nombre8);
+				}
 				break;
-			case "juego":
-				var msg1 = obj.carta1,
-					msg2 = obj.carta2;
-				pruebas.innerHTML += "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='50px'><br>";
-				pruebas.innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='50px'><br>";
-				break;
+		}
+
+
+		function rondaEmpezada(empezar) {
+			var accion = "rondaEmpezada";
+			var rondaEmpezada = empezar;
+			$.post("ServletControlador", {
+				accion: accion,
+				id_usuario: sessionStorage.getItem("id_usuario"),
+				id_sala: sessionStorage.getItem("id_sala"),
+				rondaEmpezada: rondaEmpezada
+			});
 		}
 	}
 
 	function juego() {
-		//cambiar esto, es para pruebas:
-		var id_usuario = document.getElementById('apuesta');
-
-		/*var msg = {
-			accion: "juego",
-			id_usuario: id_usuario.value,
-			id_sala: "1",
-			nombre: nombre.value,
-			mensaje: mensaje.value
-		};
-		ws.send(JSON.stringify(msg));*/
-
 		$.post("ServletControlador", {
 			accion: "juego",
-			id_usuario: id_usuario.value,
-			id_sala: "1",
+			id_usuario: sessionStorage.getItem("id_usuario"),
+			id_sala: sessionStorage.getItem("id_sala")
+		}, function(responseText) {
+			var cartas = responseText.split("@");
+			pruebas.innerHTML += "<img src='img/baraja/" + cartas[0] + ".svg' alt='Carta' width='50px'><br>";
+			pruebas.innerHTML += "<img src='img/baraja/" + cartas[1] + ".svg' alt='Carta' width='50px'><br>";
+		});
+	}
+
+	function sleep(milliseconds) {
+		console.log("Sleeping...");
+		var start = new Date().getTime();
+		for (var i = 0; i < 1e7; i++) {
+			if ((new Date().getTime() - start) > milliseconds) {
+				break;
+			}
+		}
+	}
+
+	function host() {
+		var accion = "host";
+		$.post("ServletControlador", {
+			accion: accion,
+			id_usuario: sessionStorage.getItem("id_usuario"),
+			id_sala: sessionStorage.getItem("id_sala")
 		}, function(responseText) { //La respuesta es el número de jugadores
-			var cartas = responseText.split("/");
-			var carta1 = cartas[0];
-			var carta2 = cartas[1];
-			pruebas.innerHTML = "<img src='img/baraja/" + carta1 + ".svg' alt='Carta' width='50px'><br>";
-			pruebas.innerHTML += "<img src='img/baraja/" + carta2 + ".svg' alt='Carta' width='50px'><br>";
+			if (responseText == "true") {
+				esHost = "true";
+				mensajes.innerHTML = responseText;
+				//sleep(40);
+				/*if (esHost == "true") {
+					var msg = {
+						accion: "flop",
+						id_sala: sessionStorage.getItem("id_sala"),
+					};
+
+					ws.send(JSON.stringify(msg));
+				}*/
+				if (esHost == "true") {
+					var msg = {
+						accion: "todosJugadores",
+						id_sala: sessionStorage.getItem("id_sala"),
+					};
+
+					ws.send(JSON.stringify(msg));
+				}
+				else {
+					mensajes.innerHTML = "No es el host";
+				}
+			}
+			sleep(50);
+			juego();
+		});
+	}
+
+	function crearJugador() {
+		var accion = "crearJugador";
+		$.post("ServletControlador", {
+			accion: accion,
+			id_usuario: sessionStorage.getItem("id_usuario"),
+			id_sala: sessionStorage.getItem("id_sala"),
+		}, function(responseText) { //La respuesta es el número de jugadores
+			numJugadores = responseText;
+			comprobarNumJugadores();
 		});
 	}
 
 	function nuevoJugador() {
 		var accion = "nuevoJugador";
-		var id_usuario = "3";
-		var id_sala = "3";
 		$.post("ServletControlador", {
 			accion: accion,
-			id_usuario: id_usuario,
-			id_sala: id_sala
+			id_usuario: sessionStorage.getItem("id_usuario"),
+			id_sala: sessionStorage.getItem("id_sala"),
 		}, function(responseText) { //La respuesta es el número de jugadores
 			numJugadores = responseText;
 			comprobarNumJugadores();
@@ -118,28 +207,46 @@
 	}
 
 	function comprobarNumJugadores() {
-		if (numJugadores > 1) {
-			//$('#div1').html('Numero de jugadores: ' + numJugadores);
-			var msg = {
-				accion: "empezarRonda"
-			};
-			ws.send(JSON.stringify(msg));
+		var accion = "comprobarRondaEmpezada";
+		$.post("ServletControlador", {
+			accion: accion,
+			id_sala: sessionStorage.getItem("id_sala"),
+		}, function(responseText) {
+			rondaEmpezada = responseText;
+			if (numJugadores > 1 && rondaEmpezada == "false") {
+				//$('#div1').html('Numero de jugadores: ' + numJugadores);
+				var msg = {
+					accion: "empezarRonda",
+					id_usuario: sessionStorage.getItem("id_usuario"),
+					id_sala: sessionStorage.getItem("id_sala"),
+				};
+				ws.send(JSON.stringify(msg));
 
-		} else {
-			$('#div1').html("Esperando a mas jugadores...");
-		}
+			} else {
+				$('#div1').html("Esperando mas jugadores...");
+			}
+		});
+
+	}
+
+	function comprobarRondaEmpezada() {
+		var accion = "comprobarRondaEmpezada";
+		$.post("ServletControlador", {
+			accion: accion,
+			id_sala: sessionStorage.getItem("id_sala")
+		}, function(responseText) {
+			rondaEmpezada = responseText
+		});
+		return rondaEmpezada;
 	}
 
 	function fold() {
-		var apuesta = "100";
+		var apuesta = document.getElementById("apuesta").value;
 		var accion = "fold";
-		var id_usuario = "1";
-		var id_sala = "1";
 		$.post("ServletControlador", {
 			apuesta: apuesta,
 			accion: accion,
-			id_usuario: id_usuario,
-			id_sala: id_sala
+			id_usuario: sessionStorage.getItem("id_usuario")
 		}, function(responseText) {
 			$('#div2').html(responseText);
 		});
@@ -148,13 +255,10 @@
 	function call() {
 		var apuesta = "200";
 		var accion = "call";
-		var id_usuario = "2";
-		var id_sala = "2";
 		$.post("ServletControlador", {
 			apuesta: apuesta,
 			accion: accion,
-			id_usuario: id_usuario,
-			id_sala: id_sala
+			id_usuario: sessionStorage.getItem("id_usuario")
 		}, function(responseText) {
 			$('#div3').html(responseText);
 		});
@@ -163,13 +267,10 @@
 	function raise() {
 		var apuesta = "300";
 		var accion = "raise";
-		var id_usuario = "3";
-		var id_sala = "3";
 		$.post("ServletControlador", {
 			apuesta: apuesta,
 			accion: accion,
-			id_usuario: id_usuario,
-			id_sala: id_sala
+			id_usuario: sessionStorage.getItem("id_usuario")
 		}, function(responseText) {
 			$('#div4').html(responseText);
 		});
@@ -183,6 +284,14 @@
 	});
 	$("#raise").click(function() {
 		raise();
+	});
+	$("#empezar").click(function() {
+		if (window.sessionStorage) {
+			//sessionStorage.setItem("id_usuario", "1");
+			sessionStorage.setItem("id_usuario", document.getElementById('id_usuario').value);
+			sessionStorage.setItem("id_sala", "1");
+		}
+		nuevoJugador();
 	});
 
 	//desactivado de momento

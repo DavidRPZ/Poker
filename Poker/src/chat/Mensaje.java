@@ -10,8 +10,11 @@ public class Mensaje {
 	//JUEGO
 	private String id_usuario;
 	private String id_sala;
-	private String carta1;
-	private String carta2;
+	private String flop1;
+	private String flop2;
+	private String flop3;
+	private String turn;
+	private String river;
 	private String empezarRonda;
 
 	//CONSTRUCTOR
@@ -59,20 +62,44 @@ public class Mensaje {
 		this.id_sala = id_sala;
 	}
 
-	public String getCarta1() {
-		return carta1;
+	public String getFlop1() {
+		return flop1;
 	}
 
-	public void setCarta1(String carta1) {
-		this.carta1 = carta1;
+	public void setFlop1(String flop1) {
+		this.flop1 = flop1;
 	}
 
-	public String getCarta2() {
-		return carta2;
+	public String getFlop2() {
+		return flop2;
 	}
 
-	public void setCarta2(String carta2) {
-		this.carta2 = carta2;
+	public void setFlop2(String flop2) {
+		this.flop2 = flop2;
+	}
+	
+	public String getFlop3() {
+		return flop3;
+	}
+
+	public void setFlop3(String flop3) {
+		this.flop3 = flop3;
+	}
+
+	public String getTurn() {
+		return turn;
+	}
+
+	public void setTurn(String turn) {
+		this.turn = turn;
+	}
+
+	public String getRiver() {
+		return river;
+	}
+
+	public void setRiver(String river) {
+		this.river = river;
 	}
 	
 	public String getEmpezarRonda() {
@@ -82,5 +109,5 @@ public class Mensaje {
 	public void setEmpezarRonda(String empezarRonda) {
 		this.empezarRonda = empezarRonda;
 	}
-	
+
 }

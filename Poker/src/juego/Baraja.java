@@ -22,8 +22,10 @@ public class Baraja {
 		return c1;
 	}
 	
-	public static String mostrarBaraja(int i) {
-		return baraja.get(i).getNumero() + baraja.get(i).getPalo();
+	public static void mostrarBaraja() {
+		for (int i = 0; i < Baraja.barajaSize(); i++) {
+			System.out.println(baraja.get(i));
+		}
 	}
 	
 	public static void barajar() {

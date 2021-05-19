@@ -34,10 +34,9 @@ public class ServletControlador extends HttpServlet {
 		//response.setContentType("text/html");
         //ServletInputStream in = request.getInputStream();
         PrintWriter out = response.getWriter();
-        
+        int id_usuario;
+        int id_sala;
         String accion = request.getParameter("accion");
-        int id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
-      	int id_sala = Integer.parseInt(request.getParameter("id_sala"));
       	//juego.Juego.empezarRonda(id_sala); //Solo lo ejecuta el primer jugador, el "host"
       	//juego.Juego.crearJugadores(id_usuario, id_sala);
         switch (accion) {
@@ -45,9 +44,46 @@ public class ServletControlador extends HttpServlet {
         	out.print(chat.Chat.numJugadores());
         	break;
         case "juego":
-        	String cartas = juego.Juego.mostrarCarta1(id_usuario, id_sala) + "/" + juego.Juego.mostrarCarta2(id_usuario, id_sala);
+        	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
+          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
+        	String cartas = juego.Juego.mostrarCarta1(id_usuario, id_sala) + "@" + juego.Juego.mostrarCarta2(id_usuario, id_sala);
         	out.print(cartas);
         	break;
+        case "comprobarRondaEmpezada":
+          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
+        	String esRondaEmpezada = "false";
+        	if (juego.Juego.esRondaEmpezada(id_sala)) {
+        		esRondaEmpezada = "true";
+        	}
+        	out.print(esRondaEmpezada);
+        	break;
+//        case "rondaEmpezada":
+//          	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
+//          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
+//        	//Boolean rondaEmpezada = Boolean.parseBoolean(request.getParameter("rondaEmpezada"));
+//        	//juego.Juego.actualizarRondaEmpezada(id_sala, rondaEmpezada);
+//        	
+//        	break;
+        case "host":
+          	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
+          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
+          	juego.Juego.crearJugadores(id_usuario, id_sala);
+          	if (id_usuario == juego.Juego.host(id_usuario, id_sala)) {
+          		juego.Juego.actualizarRondaEmpezada(id_sala, true);
+          		juego.Baraja.crearBaraja();
+    			juego.Baraja.barajar();
+    			juego.Juego.repartir(id_sala);
+    			juego.Juego.crearJugada(id_sala);
+    			out.print("true");
+          	}
+          	else {
+          		out.print("false");
+          	}
+        	break;
+//        case "repartir":
+//          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
+//    		juego.Juego.repartir(id_sala);
+//        	break;
         case "fold":
         	//juego.Juego.fold(apuesta, id_jugador, id_sala);
         	out.print("<br>Ha elegido fold");

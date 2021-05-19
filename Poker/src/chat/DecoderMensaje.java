@@ -10,6 +10,8 @@ import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
+import juego.Juego;
+
 public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 
 	@Override
@@ -28,14 +30,17 @@ public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 				mensaje.setAccion("empezarRonda");
 				mensaje.setEmpezarRonda("true");
 				break;
-			case "juego":
-				int id_usuario = Integer.parseInt(json.getString("id_usuario"));
-				int id_sala = Integer.parseInt(json.getString("id_sala"));
+			case "todosJugadores":
 				mensaje.setAccion(json.getString("accion"));
-				mensaje.setId_usuario(json.getString("id_usuario"));
 				mensaje.setId_sala(json.getString("id_sala"));
-				mensaje.setCarta1(juego.Juego.mostrarCarta1(id_usuario, id_sala));
-				mensaje.setCarta2(juego.Juego.mostrarCarta2(id_usuario, id_sala));
+				break;
+			case "flop":
+				int id_sala = Integer.parseInt(json.getString("id_sala"));
+				String[] flop = Juego.flop(id_sala);
+				mensaje.setAccion(json.getString("accion"));
+				mensaje.setFlop1(flop[0]);
+				mensaje.setFlop2(flop[1]);
+				mensaje.setFlop3(flop[2]);
 				break;
 			}
 		}
