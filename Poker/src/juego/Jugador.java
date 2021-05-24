@@ -1,6 +1,6 @@
 package juego;
 
-public class Jugador {
+public class Jugador implements Comparable<Jugador>{
 	
 	//ATRIBUTOS
 	protected int id_jugador;
@@ -101,4 +101,14 @@ public class Jugador {
 		this.id_sala = id_sala;
 	}
 
+	@Override
+	public int compareTo(Jugador j) {
+		if (id_usuario < j.id_usuario) {
+			return -1;
+		}
+		if (id_usuario > j.id_usuario) {
+			return 1;
+		}
+		return 0;
+	}
 }

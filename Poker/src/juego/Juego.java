@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 //import java.util.HashMap;
 //import java.util.LinkedHashMap;
 
@@ -25,10 +26,10 @@ public class Juego {
 			}
 		}
 	}
-	
+
 	public static String[] flop(int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
-		String[] flop = {"", "", ""};
+		String[] flop = { "", "", "" };
 		try {
 			Statement st = con.createStatement();
 			String consulta = "SELECT flop1, flop2, flop3 FROM Jugadas WHERE id_sala = " + id_sala;
@@ -46,6 +47,44 @@ public class Juego {
 			bd.ConexionBD.cerrarConexion(con);
 		}
 		return flop;
+	}
+
+	public static String turn(int id_sala) {
+		Connection con = bd.ConexionBD.abrirConexion();
+		String turn = "";
+		try {
+			Statement st = con.createStatement();
+			String consulta = "SELECT turn FROM Jugadas WHERE id_sala = " + id_sala;
+			ResultSet rs = st.executeQuery(consulta);
+			rs.next();
+			turn = rs.getString("turn");
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			bd.ConexionBD.cerrarConexion(con);
+		}
+		return turn;
+	}
+
+	public static String river(int id_sala) {
+		Connection con = bd.ConexionBD.abrirConexion();
+		String river = "";
+		try {
+			Statement st = con.createStatement();
+			String consulta = "SELECT river FROM Jugadas WHERE id_sala = " + id_sala;
+			ResultSet rs = st.executeQuery(consulta);
+			rs.next();
+			river = rs.getString("river");
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			bd.ConexionBD.cerrarConexion(con);
+		}
+		return river;
 	}
 
 	public static void crearJugada(int id_sala) {
@@ -143,6 +182,55 @@ public class Juego {
 		}
 	}
 
+	public static void actualizarCiegas(int id_sala, int empieza) {
+		Connection con = bd.ConexionBD.abrirConexion();
+		String consulta1 = "";
+		String consulta2 = "";
+		int ciega_pequena = 0;
+		int ciega_grande = 0;
+		if (empieza > 1) {
+			consulta1 = "UPDATE Jugadores SET ciega_grande = true WHERE id_usuario = "
+					+ jugadores.get(empieza - 1).id_usuario + " AND id_sala = " + id_sala;
+			consulta2 = "UPDATE Jugadores SET ciega_pequena = true WHERE id_usuario = "
+					+ jugadores.get(empieza - 2).id_usuario + " AND id_sala = " + id_sala;
+		} else {
+			if (empieza == 1) {
+				consulta1 = "UPDATE Jugadores SET ciega_grande = true WHERE id_usuario = "
+						+ jugadores.get(empieza - 1).id_usuario + " AND id_sala = " + id_sala;
+				consulta2 = "UPDATE Jugadores SET ciega_pequena = true WHERE id_usuario = "
+						+ jugadores.get(jugadores.size() - 1).id_usuario + " AND id_sala = " + id_sala;
+			} else {
+				if (empieza == 0) {
+					consulta1 = "UPDATE Jugadores SET ciega_grande = true WHERE id_usuario = "
+							+ jugadores.get(jugadores.size() - 1).id_usuario + " AND id_sala = " + id_sala;
+					consulta2 = "UPDATE Jugadores SET ciega_pequena = true WHERE id_usuario = "
+							+ jugadores.get(jugadores.size() - 2).id_usuario + " AND id_sala = " + id_sala;
+				}
+			}
+		}
+		try {
+			Statement st = con.createStatement();
+			st.executeUpdate(consulta1);
+			st.executeUpdate(consulta2);
+			String consulta3 = "SELECT id_usuario FROM Jugadores WHERE ciega_pequena = true AND id_sala = " + id_sala;
+			String consulta4 = "SELECT id_usuario FROM Jugadores WHERE ciega_grande = true AND id_sala = " + id_sala;
+			ResultSet rs = st.executeQuery(consulta3);
+			rs.next();
+			ciega_pequena = rs.getInt("id_usuario");
+			rs = st.executeQuery(consulta4);
+			rs.next();
+			ciega_grande = rs.getInt("id_usuario");
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			bd.ConexionBD.cerrarConexion(con);
+			actualizarFichas(utils.Constantes.CIEGA_PEQUENA, ciega_pequena);
+			actualizarFichas(utils.Constantes.CIEGA_GRANDE, ciega_grande);
+		}
+	}
+
 	public static void repartir(int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
 		int id_jugador = 0, id_usuario = 0;
@@ -152,7 +240,7 @@ public class Juego {
 			String consulta1 = "SELECT id_jugador, ciega_pequena, ciega_grande, activo, ganador, id_usuario FROM Jugadores WHERE id_sala = "
 					+ id_sala;
 			ResultSet rs = st.executeQuery(consulta1);
-			String[] consultas = {"", "", "", "", "", "", "", ""};
+			String[] consultas = { "", "", "", "", "", "", "", "" };
 			int cont = 0;
 			while (rs.next()) {
 				id_jugador = rs.getInt("id_jugador");
@@ -161,7 +249,7 @@ public class Juego {
 				activo = rs.getBoolean("activo");
 				ganador = rs.getBoolean("ganador");
 				id_usuario = rs.getInt("id_usuario");
-				
+
 				Carta c1 = Baraja.repartirCartas();
 				String carta1 = c1.getNumero() + c1.getPalo();
 				Carta c2 = Baraja.repartirCartas();
@@ -183,19 +271,20 @@ public class Juego {
 			e.printStackTrace();
 		} finally {
 			bd.ConexionBD.cerrarConexion(con);
+			Collections.sort(jugadores);
 		}
 	}
-	
-	public static int[] todosJugadores(int id_sala) {
+
+	public static int[] todosUsuarios(int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
 		int[] ids = new int[chat.Chat.numJugadores()];
 		try {
 			Statement st = con.createStatement();
-			String consulta = "SELECT id_jugador FROM Jugadores WHERE id_sala = " + id_sala;
+			String consulta = "SELECT id_usuario FROM Jugadores WHERE id_sala = " + id_sala + " ORDER BY id_usuario";
 			ResultSet rs = st.executeQuery(consulta);
 			int cont = 0;
 			while (rs.next()) {
-				ids[cont] = rs.getInt("id_jugador");
+				ids[cont] = rs.getInt("id_usuario");
 				cont++;
 			}
 			rs.close();
@@ -207,13 +296,14 @@ public class Juego {
 		}
 		return ids;
 	}
-	
+
 	public static String[] todosNombres(int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
 		String[] nombres = new String[chat.Chat.numJugadores()];
 		try {
 			Statement st = con.createStatement();
-			String consulta = "SELECT nombre FROM usuarios NATURAL JOIN Jugadores WHERE id_sala = " + id_sala + " ORDER BY id_jugador";
+			String consulta = "SELECT nombre FROM usuarios NATURAL JOIN Jugadores WHERE id_sala = " + id_sala
+					+ " ORDER BY id_usuario";
 			ResultSet rs = st.executeQuery(consulta);
 			int cont = 0;
 			while (rs.next()) {
@@ -230,6 +320,29 @@ public class Juego {
 		return nombres;
 	}
 
+	public static int[] todasFichas(int id_sala) {
+		Connection con = bd.ConexionBD.abrirConexion();
+		int[] fichas = new int[chat.Chat.numJugadores()];
+		try {
+			Statement st = con.createStatement();
+			String consulta = "SELECT fichas FROM usuarios NATURAL JOIN Jugadores WHERE id_sala = " + id_sala
+					+ " ORDER BY id_usuario";
+			ResultSet rs = st.executeQuery(consulta);
+			int cont = 0;
+			while (rs.next()) {
+				fichas[cont] = rs.getInt("fichas");
+				cont++;
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			bd.ConexionBD.cerrarConexion(con);
+		}
+		return fichas;
+	}
+
 	public static void borrarJugadores(int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
 		try {
@@ -244,7 +357,7 @@ public class Juego {
 		}
 		jugadores.clear();
 	}
-	
+
 	public static void borrarJugador(int id_usuario, int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
 		try {
@@ -353,5 +466,4 @@ public class Juego {
 			}
 		}
 	}
-
 }

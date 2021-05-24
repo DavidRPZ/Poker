@@ -23,18 +23,35 @@ public class EncoderMensaje implements Encoder.TextStream<Mensaje> {
 		case "empezarRonda":
 			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("empezarRonda", object.getEmpezarRonda()).build();
 			break;
-		case "todosJugadores":
-			int[] todosJugadores = juego.Juego.todosJugadores(Integer.parseInt(object.getId_sala()));
+		case "todosUsuarios":
+			int[] todosUsuarios = juego.Juego.todosUsuarios(Integer.parseInt(object.getId_sala()));
 			String[] todosNombres = juego.Juego.todosNombres(Integer.parseInt(object.getId_sala()));
+			int[] todasFichas = juego.Juego.todasFichas(Integer.parseInt(object.getId_sala()));
 			JsonObjectBuilder objeto = Json.createObjectBuilder().add("accion", object.getAccion());
-			for (int i = 0; i < todosJugadores.length; i++) {
-				objeto.add("J" + (i + 1), String.valueOf(todosJugadores[i]));
+			for (int i = 0; i < todosUsuarios.length; i++) {
+				objeto.add("J" + (i + 1), String.valueOf(todosUsuarios[i]));
 				objeto.add("nombre" + (i + 1), todosNombres[i]);
+				objeto.add("F" + (i + 1), todasFichas[i]);
 			}
 			json = objeto.build();
 			break;
 		case "flop":
 			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("flop1", object.getFlop1()).add("flop2", object.getFlop2()).add("flop3", object.getFlop3()).build();
+			break;
+		case "turn":
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("turn", object.getTurn()).build();
+			break;
+		case "river":
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("river", object.getRiver()).build();
+			break;
+		case "fold":
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("id_user", object.getId_usuario()).build();
+			break;
+		case "call":
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).build();
+			break;
+		case "raise":
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).build();
 			break;
 		}
 		try (JsonWriter jsonWriter = Json.createWriter(writer)) {

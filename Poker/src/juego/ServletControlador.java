@@ -69,11 +69,13 @@ public class ServletControlador extends HttpServlet {
           	id_sala = Integer.parseInt(request.getParameter("id_sala"));
           	juego.Juego.crearJugadores(id_usuario, id_sala);
           	if (id_usuario == juego.Juego.host(id_usuario, id_sala)) {
+          		int empieza = Integer.parseInt(request.getParameter("empieza"));
           		juego.Juego.actualizarRondaEmpezada(id_sala, true);
           		juego.Baraja.crearBaraja();
     			juego.Baraja.barajar();
     			juego.Juego.repartir(id_sala);
     			juego.Juego.crearJugada(id_sala);
+    			juego.Juego.actualizarCiegas(id_sala, empieza);
     			out.print("true");
           	}
           	else {
