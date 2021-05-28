@@ -15,7 +15,10 @@ public class Mensaje {
 	private String flop3;
 	private String turn;
 	private String river;
+	private String apuesta;
 	private String empezarRonda;
+	private String bote;
+	private String empieza;
 
 	//CONSTRUCTOR
 	public Mensaje() {
@@ -102,6 +105,14 @@ public class Mensaje {
 		this.river = river;
 	}
 	
+	public String getApuesta() {
+		return apuesta;
+	}
+
+	public void setApuesta(String apuesta) {
+		this.apuesta = apuesta;
+	}
+	
 	public String getEmpezarRonda() {
 		return empezarRonda;
 	}
@@ -110,4 +121,20 @@ public class Mensaje {
 		this.empezarRonda = empezarRonda;
 	}
 
+	public String getBote() {
+		return bote;
+	}
+
+	public void setBote(String bote) {
+		this.bote = bote;
+	}
+
+	public String getEmpieza() {
+		return empieza;
+	}
+
+	public void setEmpieza(String empieza) {
+		this.empieza = empieza;
+	}
+	
 }

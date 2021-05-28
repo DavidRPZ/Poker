@@ -43,12 +43,6 @@ public class ServletControlador extends HttpServlet {
         case "nuevoJugador":
         	out.print(chat.Chat.numJugadores());
         	break;
-        case "juego":
-        	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
-          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
-        	String cartas = juego.Juego.mostrarCarta1(id_usuario, id_sala) + "@" + juego.Juego.mostrarCarta2(id_usuario, id_sala);
-        	out.print(cartas);
-        	break;
         case "comprobarRondaEmpezada":
           	id_sala = Integer.parseInt(request.getParameter("id_sala"));
         	String esRondaEmpezada = "false";
@@ -57,13 +51,6 @@ public class ServletControlador extends HttpServlet {
         	}
         	out.print(esRondaEmpezada);
         	break;
-//        case "rondaEmpezada":
-//          	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
-//          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
-//        	//Boolean rondaEmpezada = Boolean.parseBoolean(request.getParameter("rondaEmpezada"));
-//        	//juego.Juego.actualizarRondaEmpezada(id_sala, rondaEmpezada);
-//        	
-//        	break;
         case "host":
           	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
           	id_sala = Integer.parseInt(request.getParameter("id_sala"));
@@ -82,22 +69,13 @@ public class ServletControlador extends HttpServlet {
           		out.print("false");
           	}
         	break;
-//        case "repartir":
-//          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
-//    		juego.Juego.repartir(id_sala);
-//        	break;
-        case "fold":
-        	//juego.Juego.fold(apuesta, id_jugador, id_sala);
-        	out.print("<br>Ha elegido fold");
+        case "juego":
+        	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
+          	id_sala = Integer.parseInt(request.getParameter("id_sala"));
+        	String cartas = juego.Juego.mostrarCarta1(id_usuario, id_sala) + "@" + juego.Juego.mostrarCarta2(id_usuario, id_sala);
+        	out.print(cartas);
         	break;
-        case "call":
-        	//juego.Juego.call(apuesta, id_jugador, id_sala);
-        	out.print("<br>Ha elegido call");
-        	break;
-        case "raise":
-        	//juego.Juego.raise(apuesta, id_jugador, id_sala);
-        	out.print("<br>Ha elegido raise");
-        	break;
+        
         }
         
         out.close();

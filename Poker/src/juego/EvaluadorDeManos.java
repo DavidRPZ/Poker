@@ -11,7 +11,7 @@ public class EvaluadorDeManos implements Comparator<Carta> {
 	// esCartaAlta
 
 	// metodo innecesario
-	public static Boolean esCartaAlta(Carta[] mano) {
+	/*public static Boolean esCartaAlta(Carta[] mano) {
 		int[] nuevaMano = transformar(mano);
 		nuevaMano = ordenarCartasPorNumero(nuevaMano);
 		for (int i = 0; i < nuevaMano.length - 1; i++) {
@@ -20,7 +20,7 @@ public class EvaluadorDeManos implements Comparator<Carta> {
 			}
 		}
 		return true;
-	}
+	}*/
 
 	public static Boolean esPareja(Carta[] mano) {
 		int[] nuevaMano = transformar(mano);

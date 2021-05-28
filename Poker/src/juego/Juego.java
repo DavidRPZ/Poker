@@ -14,6 +14,7 @@ public class Juego {
 	protected static ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
 	protected static Sala sala;
 	protected static int bote;
+	protected static ArrayList<Carta> jugada = new ArrayList<Carta>();
 
 	public static void empezarRonda(int id_usuario, int id_sala) {
 		if (jugadores.get(0).getId_usuario() == id_usuario) {
@@ -92,14 +93,19 @@ public class Juego {
 		try {
 			Statement st = con.createStatement();
 			Carta carta1 = Baraja.repartirCartas();
+			jugada.add(carta1);
 			String flop1 = carta1.getNumero() + carta1.getPalo();
 			Carta carta2 = Baraja.repartirCartas();
+			jugada.add(carta2);
 			String flop2 = carta2.getNumero() + carta2.getPalo();
 			Carta carta3 = Baraja.repartirCartas();
+			jugada.add(carta3);
 			String flop3 = carta3.getNumero() + carta3.getPalo();
 			Carta carta4 = Baraja.repartirCartas();
+			jugada.add(carta4);
 			String turn = carta4.getNumero() + carta4.getPalo();
 			Carta carta5 = Baraja.repartirCartas();
+			jugada.add(carta5);
 			String river = carta5.getNumero() + carta5.getPalo();
 			String consulta1 = "INSERT INTO Jugadas(flop1, flop2, flop3, turn, river, id_sala) VALUES ('" + flop1
 					+ "', '" + flop2 + "', '" + flop3 + "', '" + turn + "', '" + river + "', " + id_sala + ")";
@@ -190,21 +196,21 @@ public class Juego {
 		int ciega_grande = 0;
 		if (empieza > 1) {
 			consulta1 = "UPDATE Jugadores SET ciega_grande = true WHERE id_usuario = "
-					+ jugadores.get(empieza - 1).id_usuario + " AND id_sala = " + id_sala;
+					+ jugadores.get(empieza - 1).getId_usuario() + " AND id_sala = " + id_sala;
 			consulta2 = "UPDATE Jugadores SET ciega_pequena = true WHERE id_usuario = "
-					+ jugadores.get(empieza - 2).id_usuario + " AND id_sala = " + id_sala;
+					+ jugadores.get(empieza - 2).getId_usuario() + " AND id_sala = " + id_sala;
 		} else {
 			if (empieza == 1) {
 				consulta1 = "UPDATE Jugadores SET ciega_grande = true WHERE id_usuario = "
-						+ jugadores.get(empieza - 1).id_usuario + " AND id_sala = " + id_sala;
+						+ jugadores.get(empieza - 1).getId_usuario() + " AND id_sala = " + id_sala;
 				consulta2 = "UPDATE Jugadores SET ciega_pequena = true WHERE id_usuario = "
-						+ jugadores.get(jugadores.size() - 1).id_usuario + " AND id_sala = " + id_sala;
+						+ jugadores.get(jugadores.size() - 1).getId_usuario() + " AND id_sala = " + id_sala;
 			} else {
 				if (empieza == 0) {
 					consulta1 = "UPDATE Jugadores SET ciega_grande = true WHERE id_usuario = "
-							+ jugadores.get(jugadores.size() - 1).id_usuario + " AND id_sala = " + id_sala;
+							+ jugadores.get(jugadores.size() - 1).getId_usuario() + " AND id_sala = " + id_sala;
 					consulta2 = "UPDATE Jugadores SET ciega_pequena = true WHERE id_usuario = "
-							+ jugadores.get(jugadores.size() - 2).id_usuario + " AND id_sala = " + id_sala;
+							+ jugadores.get(jugadores.size() - 2).getId_usuario() + " AND id_sala = " + id_sala;
 				}
 			}
 		}
@@ -274,10 +280,30 @@ public class Juego {
 			Collections.sort(jugadores);
 		}
 	}
+	
+	public static int numUsuarios(int id_sala) {
+		Connection con = bd.ConexionBD.abrirConexion();
+		int numUsuarios = 0;
+		try {
+			Statement st = con.createStatement();
+			String consulta = "SELECT COUNT(*) AS numUsuarios FROM Jugadores WHERE id_sala = " + id_sala;
+			ResultSet rs = st.executeQuery(consulta);
+			while (rs.next()) {
+				numUsuarios = rs.getInt("numUsuarios");
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			bd.ConexionBD.cerrarConexion(con);
+		}
+		return numUsuarios;
+	}
 
 	public static int[] todosUsuarios(int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
-		int[] ids = new int[chat.Chat.numJugadores()];
+		int[] ids = new int[numUsuarios(id_sala)];
 		try {
 			Statement st = con.createStatement();
 			String consulta = "SELECT id_usuario FROM Jugadores WHERE id_sala = " + id_sala + " ORDER BY id_usuario";
@@ -299,7 +325,7 @@ public class Juego {
 
 	public static String[] todosNombres(int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
-		String[] nombres = new String[chat.Chat.numJugadores()];
+		String[] nombres = new String[numUsuarios(id_sala)];
 		try {
 			Statement st = con.createStatement();
 			String consulta = "SELECT nombre FROM usuarios NATURAL JOIN Jugadores WHERE id_sala = " + id_sala
@@ -322,7 +348,7 @@ public class Juego {
 
 	public static int[] todasFichas(int id_sala) {
 		Connection con = bd.ConexionBD.abrirConexion();
-		int[] fichas = new int[chat.Chat.numJugadores()];
+		int[] fichas = new int[numUsuarios(id_sala)];
 		try {
 			Statement st = con.createStatement();
 			String consulta = "SELECT fichas FROM usuarios NATURAL JOIN Jugadores WHERE id_sala = " + id_sala
@@ -341,6 +367,21 @@ public class Juego {
 			bd.ConexionBD.cerrarConexion(con);
 		}
 		return fichas;
+	}
+
+	public static void borrarJugada(int id_sala) {
+		Connection con = bd.ConexionBD.abrirConexion();
+		try {
+			Statement st = con.createStatement();
+			String consulta = "DELETE FROM Jugadas WHERE id_sala = " + id_sala;
+			st.executeUpdate(consulta);
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			bd.ConexionBD.cerrarConexion(con);
+		}
+		jugada.clear();
 	}
 
 	public static void borrarJugadores(int id_sala) {
@@ -369,6 +410,12 @@ public class Juego {
 			e.printStackTrace();
 		} finally {
 			bd.ConexionBD.cerrarConexion(con);
+		}
+		for (int i = 0; i < jugadores.size(); i++) {
+			if (jugadores.get(i).getId_usuario() == id_usuario) {
+				jugadores.remove(i);
+				break;
+			}
 		}
 	}
 
@@ -431,15 +478,8 @@ public class Juego {
 		return minId;
 	}
 
-	public static void fold(int apuesta, int id_usuario) {
-		for (int i = 0; i < jugadores.size(); i++) {
-			if (jugadores.get(i).getId_usuario() == id_usuario) {
-				jugadores.remove(i);
-				break;
-			}
-		}
-		actualizarFichas(apuesta, id_usuario);
-		borrarJugador(id_usuario, apuesta);
+	public static void fold(int id_usuario, int id_sala) {
+		borrarJugador(id_usuario, id_sala);
 	}
 
 	public static void call(int apuesta, int id_usuario) {
@@ -457,6 +497,112 @@ public class Juego {
 				Statement st = con.createStatement();
 				String consulta = "UPDATE Usuarios SET fichas = fichas - " + apuesta + " WHERE id_usuario = "
 						+ id_usuario;
+				st.executeUpdate(consulta);
+				st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				bd.ConexionBD.cerrarConexion(con);
+			}
+		}
+	}
+
+	public static void comprobarGanador(int id_sala, int fichasGanadas) {
+		Carta[] mano = new Carta[7];
+		mano[0] = jugada.get(0);
+		mano[1] = jugada.get(1);
+		mano[2] = jugada.get(2);
+		mano[3] = jugada.get(3);
+		mano[4] = jugada.get(4);
+
+		int[] ids = todosUsuarios(id_sala);
+
+		int[] resultado = new int[ids.length];
+
+		// 0 -> CartaAlta, 1 -> Pareja, -> 2 DoblePareja, 3 -> Trio, 4 -> Escalera, 5 ->
+		// Color, 6 -> FullHouse, 7 -> Poker, 8 -> EscaleraDeColor
+		for (int i = 0; i < ids.length; i++) {
+			System.out.println("ids: " + ids[i]);
+		}
+		for (int i = 0; i < jugadores.size(); i++) {
+			System.out.println("jugadores: " + jugadores.get(i).getId_usuario());
+		}
+
+		for (int i = 0; i < ids.length; i++) {
+			mano[0] = jugada.get(0);
+			mano[1] = jugada.get(1);
+			mano[2] = jugada.get(2);
+			mano[3] = jugada.get(3);
+			mano[4] = jugada.get(4);
+			mano[5] = jugadores.get(i).getCarta1();
+			mano[6] = jugadores.get(i).getCarta2();
+			if (juego.EvaluadorDeManos.esEscaleraDeColor(mano)) {
+				resultado[i] = 8;
+			} else {
+				if (juego.EvaluadorDeManos.esPoker(mano)) {
+					resultado[i] = 7;
+				} else {
+					if (juego.EvaluadorDeManos.esFullHouse(mano)) {
+						resultado[i] = 6;
+					} else {
+						if (juego.EvaluadorDeManos.esColor(mano)) {
+							resultado[i] = 5;
+						} else {
+							if (juego.EvaluadorDeManos.esEscalera(mano)) {
+								resultado[i] = 4;
+							} else {
+								if (juego.EvaluadorDeManos.esTrio(mano)) {
+									resultado[i] = 3;
+								} else {
+									if (juego.EvaluadorDeManos.esDoblePareja(mano)) {
+										resultado[i] = 2;
+									} else {
+										if (juego.EvaluadorDeManos.esPareja(mano)) {
+											resultado[i] = 1;
+										} else {
+											// CartaAlta
+											resultado[i] = 0;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			mano = new Carta[7];
+		}
+
+		int jugadaGanadora = 0;
+		for (int i = 0; i < resultado.length; i++) {
+			if (resultado[i] > jugadaGanadora) {
+				jugadaGanadora = resultado[i];
+			}
+		}
+
+		ArrayList<Integer> ganadores = new ArrayList<Integer>();
+		for (int i = 0; i < ids.length; i++) {
+			if (resultado[i] == jugadaGanadora) {
+				ganadores.add(ids[i]);
+			}
+		}
+
+		if (ganadores.size() == 1) {
+			ganador(fichasGanadas, ganadores.get(0));
+		} else {
+			fichasGanadas = fichasGanadas / ganadores.size();
+			for (int i = 0; i < ganadores.size(); i++) {
+				ganador(fichasGanadas, ganadores.get(i));
+			}
+		}
+	}
+
+	public static void ganador(int bote, int id_usuario) {
+		if (bote > 0) {
+			Connection con = bd.ConexionBD.abrirConexion();
+			try {
+				Statement st = con.createStatement();
+				String consulta = "UPDATE Usuarios SET fichas = fichas + " + bote + " WHERE id_usuario = " + id_usuario;
 				st.executeUpdate(consulta);
 				st.close();
 			} catch (SQLException e) {

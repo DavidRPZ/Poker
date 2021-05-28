@@ -21,7 +21,7 @@ public class EncoderMensaje implements Encoder.TextStream<Mensaje> {
 			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("nombre", object.getNombre()).add("mensaje", object.getMensaje()).build();
 			break;
 		case "empezarRonda":
-			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("empezarRonda", object.getEmpezarRonda()).build();
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("empezarRonda", object.getEmpezarRonda()).add("empieza", object.getEmpieza()).build();
 			break;
 		case "todosUsuarios":
 			int[] todosUsuarios = juego.Juego.todosUsuarios(Integer.parseInt(object.getId_sala()));
@@ -48,12 +48,29 @@ public class EncoderMensaje implements Encoder.TextStream<Mensaje> {
 			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("id_user", object.getId_usuario()).build();
 			break;
 		case "call":
-			json = Json.createObjectBuilder().add("accion", object.getAccion()).build();
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("id_usuario", object.getId_usuario()).add("apuesta", object.getApuesta()).build();
 			break;
 		case "raise":
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("id_usuario", object.getId_usuario()).add("apuesta", object.getApuesta()).build();
+			break;
+		case "comprobarGanador":
+			//int[] ids = juego.Juego.comprobarGanador(Integer.parseInt(object.getId_sala()), Integer.parseInt(object.getBote()));
+			JsonObjectBuilder objeto2 = Json.createObjectBuilder().add("accion", object.getAccion());
+			int[] ids = juego.Juego.todosUsuarios(Integer.parseInt(object.getId_sala()));
+			for (int i = 0; i < ids.length; i++) {
+				objeto2.add("J" + ids[i] + "C1", juego.Juego.mostrarCarta1(ids[i], Integer.parseInt(object.getId_sala())));
+				objeto2.add("J" + ids[i] + "C2", juego.Juego.mostrarCarta2(ids[i], Integer.parseInt(object.getId_sala())));
+			}
+			json = objeto2.build();
+			break;
+		case "ganadorFold":
+			json = Json.createObjectBuilder().add("accion", object.getAccion()).add("id_usuario", object.getId_usuario()).build();
+			break;
+		case "rondaTerminada":
 			json = Json.createObjectBuilder().add("accion", object.getAccion()).build();
 			break;
 		}
+		
 		try (JsonWriter jsonWriter = Json.createWriter(writer)) {
 			jsonWriter.writeObject(json);
 		}

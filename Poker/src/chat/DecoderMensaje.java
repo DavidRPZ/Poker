@@ -29,6 +29,7 @@ public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 			case "empezarRonda":
 				mensaje.setAccion("empezarRonda");
 				mensaje.setEmpezarRonda("true");
+				mensaje.setEmpieza(json.getString("empieza"));
 				break;
 			case "todosUsuarios":
 				mensaje.setAccion(json.getString("accion"));
@@ -55,6 +56,7 @@ public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 				mensaje.setRiver(river);
 				break;
 			case "fold":
+				juego.Juego.fold(Integer.parseInt(json.getString("id_usuario")), Integer.parseInt(json.getString("id_sala")));
 				mensaje.setAccion(json.getString("accion"));
 				mensaje.setId_usuario(json.getString("id_usuario"));
 				break;
@@ -62,11 +64,40 @@ public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 				int id_usuarioCall = Integer.parseInt(json.getString("id_usuario"));
 				int salaCall = Integer.parseInt(json.getString("id_sala"));
 				mensaje.setAccion(json.getString("accion"));
+				mensaje.setId_usuario(json.getString("id_usuario"));
+				mensaje.setApuesta(json.getString("apuesta"));
+				juego.Juego.actualizarFichas(Integer.parseInt(mensaje.getApuesta()), id_usuarioCall);
 				break;
 			case "raise":
 				int id_usuarioRaise = Integer.parseInt(json.getString("id_usuario"));
 				int salaRaise = Integer.parseInt(json.getString("id_sala"));
 				mensaje.setAccion(json.getString("accion"));
+				mensaje.setId_usuario(json.getString("id_usuario"));
+				mensaje.setApuesta(json.getString("apuesta"));
+				juego.Juego.actualizarFichas(Integer.parseInt(mensaje.getApuesta()), id_usuarioRaise);
+				break;
+			case "comprobarGanador":
+				mensaje.setAccion(json.getString("accion"));
+				mensaje.setId_usuario(json.getString("id_usuario"));
+				mensaje.setId_sala(json.getString("id_sala"));
+				mensaje.setBote(json.getString("bote"));
+				juego.Juego.comprobarGanador(Integer.parseInt(mensaje.getId_sala()), Integer.parseInt(mensaje.getBote()));
+				break;
+			case "ganadorFold":
+				mensaje.setAccion(json.getString("accion"));
+				mensaje.setId_usuario(json.getString("id_usuario"));
+				mensaje.setId_sala(json.getString("id_sala"));
+				mensaje.setBote(json.getString("bote"));
+				juego.Juego.ganador(Integer.parseInt(mensaje.getBote()), Integer.parseInt(mensaje.getId_usuario()));
+				break;
+			case "rondaTerminada":
+				mensaje.setAccion(json.getString("accion"));
+				mensaje.setId_usuario(json.getString("id_usuario"));
+				mensaje.setId_sala(json.getString("id_sala"));
+				juego.Juego.actualizarRondaEmpezada(Integer.parseInt(mensaje.getId_sala()), false);
+				juego.Juego.borrarJugadores(Integer.parseInt(mensaje.getId_sala()));
+				juego.Juego.borrarJugada(Integer.parseInt(mensaje.getId_sala()));
+				juego.Baraja.vaciarBaraja();
 				break;
 			}
 		}
