@@ -44,8 +44,10 @@ public class ServletControlador extends HttpServlet {
         	out.print(chat.Chat.numJugadores());
         	break;
         case "comprobarRondaEmpezada":
+          	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
           	id_sala = Integer.parseInt(request.getParameter("id_sala"));
         	String esRondaEmpezada = "false";
+        	//juego.Juego.crearJugadores(id_usuario, id_sala);
         	if (juego.Juego.esRondaEmpezada(id_sala)) {
         		esRondaEmpezada = "true";
         	}
@@ -55,27 +57,30 @@ public class ServletControlador extends HttpServlet {
           	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
           	id_sala = Integer.parseInt(request.getParameter("id_sala"));
           	juego.Juego.crearJugadores(id_usuario, id_sala);
+          	juego.Juego.esperar(50);
           	if (id_usuario == juego.Juego.host(id_usuario, id_sala)) {
-          		int empieza = Integer.parseInt(request.getParameter("empieza"));
-          		juego.Juego.actualizarRondaEmpezada(id_sala, true);
-          		juego.Baraja.crearBaraja();
-    			juego.Baraja.barajar();
-    			juego.Juego.repartir(id_sala);
-    			juego.Juego.crearJugada(id_sala);
-    			juego.Juego.actualizarCiegas(id_sala, empieza);
     			out.print("true");
           	}
           	else {
           		out.print("false");
           	}
+          	juego.Juego.esperar(50);
         	break;
         case "juego":
         	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
           	id_sala = Integer.parseInt(request.getParameter("id_sala"));
         	String cartas = juego.Juego.mostrarCarta1(id_usuario, id_sala) + "@" + juego.Juego.mostrarCarta2(id_usuario, id_sala);
+        	juego.Juego.esperar(100);
         	out.print(cartas);
         	break;
-        
+        case "borrarJugadores":
+        	juego.Juego.actualizarRondaEmpezada(Integer.parseInt(request.getParameter("id_sala")), false);
+			juego.Juego.borrarJugadores(Integer.parseInt(request.getParameter("id_sala")));
+			juego.Juego.borrarJugada(Integer.parseInt(request.getParameter("id_sala")));
+			juego.Juego.recargarFichas();;
+			juego.Baraja.vaciarBaraja();
+			juego.Juego.esperar(100);
+        	break;
         }
         
         out.close();

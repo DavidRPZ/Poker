@@ -12,12 +12,12 @@ import javax.websocket.EndpointConfig;
 
 import juego.Juego;
 
-public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
+public class DecoderMensaje implements Decoder.TextStream<Mensaje> {
 
 	@Override
 	public Mensaje decode(Reader reader) throws DecodeException, IOException {
 		Mensaje mensaje = new Mensaje();
-		
+
 		try (JsonReader jsonReader = Json.createReader(reader)) {
 			JsonObject json = jsonReader.readObject();
 			switch (json.getString("accion")) {
@@ -34,6 +34,19 @@ public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 			case "todosUsuarios":
 				mensaje.setAccion(json.getString("accion"));
 				mensaje.setId_sala(json.getString("id_sala"));
+				int empieza = Integer.parseInt(json.getString("empieza"));
+				juego.Juego.actualizarRondaEmpezada(Integer.parseInt(mensaje.getId_sala()), true);
+				juego.Juego.esperar(20);
+				juego.Baraja.crearBaraja();
+				juego.Juego.esperar(20);
+				juego.Baraja.barajar();
+				juego.Juego.esperar(20);
+				juego.Juego.repartir(Integer.parseInt(mensaje.getId_sala()));
+				juego.Juego.esperar(20);
+				juego.Juego.crearJugada(Integer.parseInt(mensaje.getId_sala()));
+				juego.Juego.esperar(20);
+				juego.Juego.actualizarCiegas(Integer.parseInt(mensaje.getId_sala()), empieza);
+				juego.Juego.esperar(20);
 				break;
 			case "flop":
 				int id_sala = Integer.parseInt(json.getString("id_sala"));
@@ -56,7 +69,8 @@ public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 				mensaje.setRiver(river);
 				break;
 			case "fold":
-				juego.Juego.fold(Integer.parseInt(json.getString("id_usuario")), Integer.parseInt(json.getString("id_sala")));
+				juego.Juego.fold(Integer.parseInt(json.getString("id_usuario")),
+						Integer.parseInt(json.getString("id_sala")));
 				mensaje.setAccion(json.getString("accion"));
 				mensaje.setId_usuario(json.getString("id_usuario"));
 				break;
@@ -81,7 +95,39 @@ public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 				mensaje.setId_usuario(json.getString("id_usuario"));
 				mensaje.setId_sala(json.getString("id_sala"));
 				mensaje.setBote(json.getString("bote"));
-				juego.Juego.comprobarGanador(Integer.parseInt(mensaje.getId_sala()), Integer.parseInt(mensaje.getBote()));
+				int jugadaGanadora = juego.Juego.comprobarGanador(Integer.parseInt(mensaje.getId_sala()),
+						Integer.parseInt(mensaje.getBote()));
+				String jugada = "";
+				switch (jugadaGanadora) {
+				case 8:
+					jugada = "Escalera de color";
+					break;
+				case 7:
+					jugada = "Poker";
+					break;
+				case 6:
+					jugada = "FullHouse";
+					break;
+				case 5:
+					jugada = "Color";
+					break;
+				case 4:
+					jugada = "Escalera";
+					break;
+				case 3:
+					jugada = "Trío";
+					break;
+				case 2:
+					jugada = "Doble pareja";
+					break;
+				case 1:
+					jugada = "Pareja";
+					break;
+				case 0:
+					jugada = "Carta alta";
+					break;
+				}
+				mensaje.setJugadaGanadora(jugada);
 				break;
 			case "ganadorFold":
 				mensaje.setAccion(json.getString("accion"));
@@ -94,16 +140,20 @@ public class DecoderMensaje implements Decoder.TextStream<Mensaje>{
 				mensaje.setAccion(json.getString("accion"));
 				mensaje.setId_usuario(json.getString("id_usuario"));
 				mensaje.setId_sala(json.getString("id_sala"));
-				juego.Juego.actualizarRondaEmpezada(Integer.parseInt(mensaje.getId_sala()), false);
-				juego.Juego.borrarJugadores(Integer.parseInt(mensaje.getId_sala()));
-				juego.Juego.borrarJugada(Integer.parseInt(mensaje.getId_sala()));
-				juego.Baraja.vaciarBaraja();
+//				juego.Juego.actualizarRondaEmpezada(Integer.parseInt(mensaje.getId_sala()), false);
+//				juego.Juego.esperar(20);
+//				juego.Juego.borrarJugadores(Integer.parseInt(mensaje.getId_sala()));
+//				juego.Juego.esperar(20);
+//				juego.Juego.borrarJugada(Integer.parseInt(mensaje.getId_sala()));
+//				juego.Juego.esperar(20);
+//				juego.Juego.recargarFichas();
+//				juego.Baraja.vaciarBaraja();
 				break;
 			}
 		}
 		return mensaje;
 	}
-	
+
 	@Override
 	public void destroy() {
 	}

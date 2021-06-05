@@ -25,7 +25,9 @@ public class EncoderMensaje implements Encoder.TextStream<Mensaje> {
 			break;
 		case "todosUsuarios":
 			int[] todosUsuarios = juego.Juego.todosUsuarios(Integer.parseInt(object.getId_sala()));
+			juego.Juego.esperar(20);
 			String[] todosNombres = juego.Juego.todosNombres(Integer.parseInt(object.getId_sala()));
+			juego.Juego.esperar(20);
 			int[] todasFichas = juego.Juego.todasFichas(Integer.parseInt(object.getId_sala()));
 			JsonObjectBuilder objeto = Json.createObjectBuilder().add("accion", object.getAccion());
 			for (int i = 0; i < todosUsuarios.length; i++) {
@@ -61,6 +63,12 @@ public class EncoderMensaje implements Encoder.TextStream<Mensaje> {
 				objeto2.add("J" + ids[i] + "C1", juego.Juego.mostrarCarta1(ids[i], Integer.parseInt(object.getId_sala())));
 				objeto2.add("J" + ids[i] + "C2", juego.Juego.mostrarCarta2(ids[i], Integer.parseInt(object.getId_sala())));
 			}
+			int[] ganadores = juego.Juego.todosGanadores(Integer.parseInt(object.getId_sala()));
+			objeto2.add("numGanadores", String.valueOf(ganadores.length));
+			for (int i = 0; i < ganadores.length; i++) {
+				objeto2.add("G" + ganadores[i], String.valueOf(ganadores[i]));
+			}
+			objeto2.add("jugadaGanadora", object.getJugadaGanadora());
 			json = objeto2.build();
 			break;
 		case "ganadorFold":

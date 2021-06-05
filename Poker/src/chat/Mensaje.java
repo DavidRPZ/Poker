@@ -19,6 +19,7 @@ public class Mensaje {
 	private String empezarRonda;
 	private String bote;
 	private String empieza;
+	private String jugadaGanadora;
 
 	//CONSTRUCTOR
 	public Mensaje() {
@@ -135,6 +136,14 @@ public class Mensaje {
 
 	public void setEmpieza(String empieza) {
 		this.empieza = empieza;
+	}
+	
+	public String getJugadaGanadora() {
+		return jugadaGanadora;
+	}
+
+	public void setJugadaGanadora(String jugadaGanadora) {
+		this.jugadaGanadora = jugadaGanadora;
 	}
 	
 }
