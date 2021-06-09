@@ -332,15 +332,12 @@
 						prop = "G" + (i + 1);
 						for (var j = 0; j < nombresJugadores.length; j++) {
 							if (idUsuarios[j] == obj[prop]) {
-								str += nombresJugadores[j];
-								if (i < numGanadores - 1) {
-									str += ", ";
-								}
+								str += nombresJugadores[j]  + ", ";
 							}
 						}
 
 					}
-					str += " con " + obj.jugadaGanadora;
+					str = str.substr(0, str.length - 3) + " con " + obj.jugadaGanadora;
 					mensajes.innerHTML = str;
 
 					//sleep(6000);
@@ -654,7 +651,7 @@
 	function comprobarNumJugadores() {
 		if (numJugadores > 1 && numJugadores < 8) {
 			//$('#div1').html('Numero de jugadores: ' + numJugadores);
-			empieza = empieza + "";
+			empieza += "";
 			var msg = {
 				accion: "empezarRonda",
 				id_usuario: sessionStorage.getItem("id_usuario"),
@@ -670,7 +667,6 @@
 			else {
 				$('#div1').html("Se ha alcanzado el máximo de jugadores...");
 			}
-
 		}
 	}
 

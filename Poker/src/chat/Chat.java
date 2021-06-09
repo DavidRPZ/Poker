@@ -29,7 +29,7 @@ public class Chat {
 	
 	@OnMessage
 	public void OnMessage(Mensaje mensaje) throws IOException, EncodeException {
-		for(Session sesion: conectados) {
+		for (Session sesion: conectados) {
 			sesion.getBasicRemote().sendObject(mensaje);
 		}
 	}

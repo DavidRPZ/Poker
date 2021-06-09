@@ -117,7 +117,6 @@ public class EvaluadorDeManos implements Comparator<Carta> {
 	public static Boolean esTrio(Carta[] mano) {
 		int[] nuevaMano = transformar(mano);
 		nuevaMano = ordenarCartasPorNumero(nuevaMano);
-		nuevaMano = darLaVuelta(nuevaMano);
 		for (int i = 0; i < nuevaMano.length - 2; i++) {
 			if (nuevaMano[i] == nuevaMano[i + 2]) {
 				return true;
@@ -182,7 +181,7 @@ public class EvaluadorDeManos implements Comparator<Carta> {
 				}
 				manoJugador[manoJugador.length - 1] = 14;
 			}
-			for (int i = 0; i < mano.length - 5; i++) {
+			for (int i = 0; i < mano.length - 4; i++) {
 				if (nuevaMano[i] - 4 == (nuevaMano[i + 4])) {
 					manoJugador[0] = nuevaMano[i];
 					manoJugador[1] = nuevaMano[i + 1];

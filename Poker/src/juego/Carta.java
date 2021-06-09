@@ -23,9 +23,9 @@ public class Carta {
 	}
 
 	//TOSTRING
-	@Override
+	/*@Override
 	public String toString() {
 		return "Carta [numero=" + numero + ", palo=" + palo + "]";
-	}
+	}*/
 
 }
