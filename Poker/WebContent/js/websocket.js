@@ -52,7 +52,13 @@
 		foldBtn.disabled = true;
 		callBtn.disabled = true;
 		raiseBtn.disabled = true;
-		//nuevoJugador();
+		/*if (window.sessionStorage) {
+			sessionStorage.setItem("id_usuario", document.getElementById('id_usuario').value);
+			sessionStorage.setItem("id_sala", "1");
+		}
+		if (!rondaEmpezada) {
+			comprobarRondaEmpezada();
+		}*/
 	}
 
 	function onClose() {
@@ -99,9 +105,9 @@
 						var msg1 = obj.flop1,
 							msg2 = obj.flop2,
 							msg3 = obj.flop3;
-						flop.innerHTML = "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='50px'>";
-						flop.innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='50px'>";
-						flop.innerHTML += "<img src='img/baraja/" + msg3 + ".svg' alt='Carta' width='50px'>";
+						flop.innerHTML = "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='40px'>";
+						flop.innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='40px'>";
+						flop.innerHTML += "<img src='img/baraja/" + msg3 + ".svg' alt='Carta' width='40px'>";
 
 					}, 100);
 				}
@@ -110,7 +116,7 @@
 				if (!rondaEmpezada) {
 					setTimeout(function() {
 						var msg = obj.turn;
-						flop.innerHTML += "<img src='img/baraja/" + msg + ".svg' alt='Carta' width='50px'>";
+						flop.innerHTML += "<img src='img/baraja/" + msg + ".svg' alt='Carta' width='40px'>";
 					}, 100);
 				}
 				break;
@@ -118,7 +124,7 @@
 				if (!rondaEmpezada) {
 					setTimeout(function() {
 						var msg = obj.river
-						flop.innerHTML += "<img src='img/baraja/" + msg + ".svg' alt='Carta' width='50px'><br>";
+						flop.innerHTML += "<img src='img/baraja/" + msg + ".svg' alt='Carta' width='40px'><br>";
 					}, 100);
 
 				}
@@ -186,7 +192,7 @@
 					copiaIdUsuarios = idUsuarios;
 					var pos;
 					for (var i = 0; i < numUsuarios; i++) {
-						document.getElementById("J" + (i + 1)).innerHTML = "<img src='img/baraja/card_back.svg' alt='Carta' width='50px'><img src='img/baraja/card_back.svg' alt='Carta' width='50px'>";
+						document.getElementById("J" + (i + 1)).innerHTML = "<img src='img/baraja/card_back.svg' alt='Carta' width='40px'><img src='img/baraja/card_back.svg' alt='Carta' width='40px'>";
 						if (sessionStorage.getItem("id_usuario") == idUsuarios[i]) {
 							pos = i;
 						}
@@ -317,11 +323,11 @@
 							prop = "J" + idUsuarios[i] + "C1";
 							msg1 = obj[prop];
 							//msg1 = obj["J" + idUsuarios[i] + "C1"];
-							document.getElementById("J" + (i + 1)).innerHTML = "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='50px'>";
+							document.getElementById("J" + (i + 1)).innerHTML = "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='40px'>";
 							prop = "J" + idUsuarios[i] + "C2";
 							msg2 = obj[prop];
 							//msg2 = obj["J" + idUsuarios[i] + "C2"];
-							document.getElementById("J" + (i + 1)).innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='50px'><br>";
+							document.getElementById("J" + (i + 1)).innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='40px'><br>";
 						}
 					}
 					numGanadores = parseFloat(obj.numGanadores)
@@ -571,8 +577,8 @@
 			id_sala: sessionStorage.getItem("id_sala")
 		}, function(responseText) {
 			var cartas = responseText.split("@");
-			document.getElementById("J" + (pos + 1)).innerHTML = "<img src='img/baraja/" + cartas[0] + ".svg' alt='Carta' width='50px'>";
-			document.getElementById("J" + (pos + 1)).innerHTML += "<img src='img/baraja/" + cartas[1] + ".svg' alt='Carta' width='50px'><br>";
+			document.getElementById("J" + (pos + 1)).innerHTML = "<img src='img/baraja/" + cartas[0] + ".svg' alt='Carta' width='40px'>";
+			document.getElementById("J" + (pos + 1)).innerHTML += "<img src='img/baraja/" + cartas[1] + ".svg' alt='Carta' width='40px'>";
 			turnos();
 		});
 	}
@@ -783,7 +789,6 @@
 	});
 	$("#empezar").click(function() {
 		if (window.sessionStorage) {
-			//sessionStorage.setItem("id_usuario", "1");
 			sessionStorage.setItem("id_usuario", document.getElementById('id_usuario').value);
 			sessionStorage.setItem("id_sala", "1");
 		}
@@ -792,16 +797,4 @@
 		}
 	});
 
-	//desactivado de momento
-	/*var tiempo = 20;
-
-	setInterval(function() {
-		if (tiempo > -1) {
-			$('#div5').html("Tiempo restante: " + tiempo);
-			tiempo--;
-		} else {
-			fold();
-			tiempo = 20;
-		}
-	}, 1000);*/
 })(window, document, JSON);
