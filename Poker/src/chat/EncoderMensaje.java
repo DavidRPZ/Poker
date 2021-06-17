@@ -66,7 +66,7 @@ public class EncoderMensaje implements Encoder.TextStream<Mensaje> {
 			int[] ganadores = juego.Juego.todosGanadores(Integer.parseInt(object.getId_sala()));
 			objeto2.add("numGanadores", String.valueOf(ganadores.length));
 			for (int i = 0; i < ganadores.length; i++) {
-				objeto2.add("G" + ganadores[i], String.valueOf(ganadores[i]));
+				objeto2.add("G" + (i + 1), String.valueOf(ganadores[i]));
 			}
 			objeto2.add("jugadaGanadora", object.getJugadaGanadora());
 			json = objeto2.build();

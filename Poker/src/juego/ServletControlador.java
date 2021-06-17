@@ -51,7 +51,10 @@ public class ServletControlador extends HttpServlet {
         	if (juego.Juego.esRondaEmpezada(id_sala)) {
         		esRondaEmpezada = "true";
         	}
+        	juego.Juego.esperar(50);
+        	System.out.println(esRondaEmpezada);
         	out.print(esRondaEmpezada);
+        	
         	break;
         case "host":
           	id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
@@ -77,9 +80,9 @@ public class ServletControlador extends HttpServlet {
         	juego.Juego.actualizarRondaEmpezada(Integer.parseInt(request.getParameter("id_sala")), false);
 			juego.Juego.borrarJugadores(Integer.parseInt(request.getParameter("id_sala")));
 			juego.Juego.borrarJugada(Integer.parseInt(request.getParameter("id_sala")));
-			juego.Juego.recargarFichas();;
+			juego.Juego.recargarFichas();
 			juego.Baraja.vaciarBaraja();
-			juego.Juego.esperar(100);
+			juego.Juego.esperar(50);
         	break;
         }
         

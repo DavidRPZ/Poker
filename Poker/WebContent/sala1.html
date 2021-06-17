@@ -8,13 +8,22 @@
 </head>
 
 <style>
+	body {
+		background-color: rgb(112, 164, 34);
+	}
+
 	.main {
-		width: 1000px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: auto;
+		width: 1100px;
+		margin-top: 10px;
 	}
 
 	.table {
 		background-color: green;
-		height: 500px;
+		height: 550px;
 		width: 80%;
 		border-radius: 50%;
 		margin: 0 auto;
@@ -24,39 +33,14 @@
 	.board {
 		position: relative;
 		top: 40%;
-		left: 30%;
+		left: 35%;
 	}
 
-	.card-small {
+	#flop {
+		margin-top: 30px;
 		margin-left: 5px;
 		margin-right: 5px;
 		float: left;
-	}
-
-	.card-small2 {
-		border: .2em solid black;
-		border-radius: 10%;
-		height: 80px;
-		width: 56px;
-		/*70% of height*/
-		margin-right: 5px;
-		float: left;
-		background-color: white;
-	}
-
-	.card-text {
-		margin: 0;
-		margin-top: 15%;
-		text-align: center;
-		font-size: 1.5em;
-		font-weight: bold;
-		padding: 0;
-	}
-
-	.card-img {
-		text-align: center;
-		margin: 0;
-		font-size: 2em;
 	}
 
 	.red {
@@ -70,207 +54,387 @@
 	.players {
 		position: relative;
 		width: 100%;
-		height: 100%;
+		height: 0px;
 		z-index: 100;
 
 	}
 
 	.player {
 		position: absolute;
-		color: red;
+		color: black;
+	}
+
+	.lados {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.player-1 {
-		top: 25%;
-		left: 0px;
+		top: -160px;
+		left: 515px;
 	}
 
 	.player-2 {
-		top: 25%;
-		right: 0px;
+		top: 20px;
+		right: -100px;
 	}
 
 	.player-3 {
-		top: 60%;
-		left: 0px;
+		top: 175px;
+		right: -100px;
 	}
 
 	.player-4 {
-		top: 60%;
-		right: 0px;
+		top: 286px;
+		left: 515px;
 	}
 
 	.player-5 {
-		top: 0px;
-		left: 25%;
+		top: 286px;
+		left: 210px;
 	}
 
 	.player-6 {
-		bottom: 0px;
-		left: 60%;
+		top: 175px;
+		left: -100px;
 	}
 
 	.player-7 {
-		top: 0px;
-		left: 60%;
+		top: 20px;
+		left: -100px;
 	}
 
 	.player-8 {
-		bottom: 0px;
-		left: 25%;
+		top: -160px;
+		left: 210px;
+	}
+
+	#nombreJ1,
+	#nombreJ2,
+	#nombreJ3,
+	#nombreJ4,
+	#nombreJ5,
+	#nombreJ6,
+	#nombreJ7,
+	#nombreJ8 {
+		display: flex;
+		width: 150px;
+		height: 30px;
+		background-color: lightgray;
+		border: 2px solid black;
+		border-radius: 15% 15% 0% 0%;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#fichasJ1,
+	#fichasJ2,
+	#fichasJ3,
+	#fichasJ4,
+	#fichasJ5,
+	#fichasJ6,
+	#fichasJ7,
+	#fichasJ8 {
+		display: flex;
+		width: 150px;
+		height: 25px;
+		background-color: lightgray;
+		border-bottom: 2px solid black;
+		border-right: 2px solid black;
+		border-left: 2px solid black;
+		border-radius: 0% 0% 15% 15%;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#J1,
+	#totalApostadoJ1,
+	#J2,
+	#totalApostadoJ2,
+	#J3,
+	#totalApostadoJ3,
+	#J4,
+	#totalApostadoJ4,
+	#J5,
+	#totalApostadoJ5,
+	#J6,
+	#totalApostadoJ6,
+	#J7,
+	#totalApostadoJ7,
+	#J8,
+	#totalApostadoJ8 {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 10px;
+	}
+
+	#J1,
+	#J2,
+	#J3,
+	#J4,
+	#J5,
+	#J6,
+	#J7,
+	#J8,
+	#nombreJ1,
+	#nombreJ2,
+	#nombreJ3,
+	#nombreJ4,
+	#nombreJ5,
+	#nombreJ6,
+	#nombreJ7,
+	#nombreJ8,
+	#fichasJ1,
+	#fichasJ2,
+	#fichasJ3,
+	#fichasJ4,
+	#fichasJ5,
+	#fichasJ6,
+	#fichasJ7,
+	#fichasJ8 {
+		display: none;
+	}
+
+	.datos {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	.chat {
+		float: left;
+		margin-left: 40px;
+		margin-top: -65px;
+	}
+
+	.botones {
+		float: right;
+		border: 6px solid black;
+		border-radius: 25%;
+		background-color: crimson;
+		padding: 20px 20px 0px 20px;
+		margin-right: 40px;
+	}
+
+	.jugadas {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 20px;
+	}
+
+	input[type="number"] {
+		border-radius: 15%;
+		background-color: rgb(255, 145, 167);
+	}
+
+	input[type="button"] {
+		margin-left: 5px;
+		margin-right: 5px;
+		background-color: rgb(210, 255, 255);
+		border-radius: 25%;
+		width: 60px;
+		height: 30px;
+		border: 2px solid black;
+	}
+
+	input[type="button"]:hover {
+		cursor: pointer;
+	}
+
+	textarea {
+		border: 2px solid black;
+		resize: none;
+		width: 246px;
+		background-color: lightgray;
+	}
+
+	#conversacion {
+		border: 2px solid black;
+		height: 125px;
+		width: 250px;
+		overflow-y: scroll;
+		background-color: lightgray;
+	}
+
+	#tiempo {
+		margin-top: -30px;
+		width: 250px;
+		font-size: 20px;
+		text-align: center;
+		font-weight: bold;
+		color: white;
+	}
+
+	#bote {
+		width: 250px;
+		font-size: 20px;
+		margin-top: 120px;
+		text-align: center;
+		font-weight: bold;
+		color: white;
 	}
 </style>
 
 <body>
-	<h1>test websocket</h1>
-	<div>
-		<div>
-			<label>Nombre:</label> <input type="text" id="usuario" placeholder="Usuario">
-		</div>
-		<div>
-			<label>Mensaje:</label>
-			<textarea id="mensaje"></textarea>
-		</div>
-		<div>
-			<button id="btnEnviar">Enviar</button>
-		</div>
-		<div id="conversacion"></div>
-	</div>
-	<form action="" name="jugada" method="POST">
-		<input type="number" id="apuesta" name="apuesta" value="50" oninput="rangeApuesta.value=apuesta.value" min="1"
-			max="200"> <input type="range" id="rangeApuesta" name="rangeApuesta" min="1" max="200" step="1"
-			oninput="apuesta.value=rangeApuesta.value"> <input type="button" id="fold" name="fold" value="fold"> <input
-			type="button" id="call" name="call" value="call"> <input type="button" id="raise" name="raise"
-			value="raise"><br><input type="text" id="id_usuario" name="id_usuario" value="2"> <input type="button"
-			id="empezar" name="empezar" value="Empezar">
-	</form>
-	<div id="bote"></div>
-	<div id="mesa"></div>
-	<!--<div id="flop"></div>-->
-	<div id="div1"></div>
-	<div id="div2"></div>
-	<div id="div3"></div>
-	<div id="div4"></div>
-	<div id="div5"></div>
+
 	<div class="main">
 		<div class="table">
 			<!-- DIV DONDE IRAN LAS CARTAS-->
 			<div class="board">
-				<div class="card-small" id="flop">
+				<div id="tiempo">
+					<!-- Tiempo restante: 20 -->
+				</div>
+				<div id="flop">
+					<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+					<img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+					<img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+					<img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+					<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
+				</div>
+				<div id="bote">
+					<!-- Bote total: 30 -->
 				</div>
 			</div>
+
 			<!-- DIV DONDE IRAN LOS JUGADORES-->
 			<div class="players">
 				<div class="player player-1">
-					<div id="J1">
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-					</div>
-					<div id="nombreJ1">Jugador 1</div>
+					<div id="nombreJ1"></div>
 					<div id="fichasJ1"></div>
+					<div id="J1">
+						<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+						<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
+					</div>
 					<div id="totalApostadoJ1"></div>
 				</div>
-				<div class="player player-2">
-					<div id="J2">
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-					</div>
-					<div id="nombreJ2">Jugador 2</div>
-					<div id="fichasJ2"></div>
+				<div class="player lados player-2">
 					<div id="totalApostadoJ2"></div>
-				</div>
-				<div class="player player-3">
-					<div id="J3">
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
+					<div id="J2">
+						<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+						<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
 					</div>
-					<div id="nombreJ3">Jugador 3</div>
-					<div id="fichasJ3"></div>
+					<div class="datos">
+						<div id="nombreJ2"></div>
+						<div id="fichasJ2"></div>
+					</div>
+
+				</div>
+				<div class="player lados player-3">
 					<div id="totalApostadoJ3"></div>
+					<div id="J3">
+						<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+						<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
+					</div>
+					<div class="datos">
+						<div id="nombreJ3"></div>
+						<div id="fichasJ3"></div>
+					</div>
 				</div>
 				<div class="player player-4">
-					<div id="J4">
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-					</div>
-					<div id="nombreJ4">Jugador 4</div>
-					<div id="fichasJ4"></div>
 					<div id="totalApostadoJ4"></div>
+					<div id="J4">
+						<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+						<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
+					</div>
+					<div id="nombreJ4"></div>
+					<div id="fichasJ4"></div>
 				</div>
 				<div class="player player-5">
-					<div id="J5">
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-					</div>
-					<div id="nombreJ5">Jugador 5</div>
-					<div id="fichasJ5"></div>
 					<div id="totalApostadoJ5"></div>
-				</div>
-				<div class="player player-6">
-					<div id="J6">
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
+					<div id="J5">
+						<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+						<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
 					</div>
-					<div id="nombreJ6">Jugador 6</div>
-					<div id="fichasJ6"></div>
+					<div id="nombreJ5"></div>
+					<div id="fichasJ5"></div>
+				</div>
+				<div class="player lados player-6">
+					<div class="datos">
+						<div id="nombreJ6"></div>
+						<div id="fichasJ6"></div>
+					</div>
+					<div id="J6">
+						<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+						<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
+					</div>
+
 					<div id="totalApostadoJ6"></div>
 				</div>
-				<div class="player player-7">
-					<div id="J7">
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
+				<div class="player lados player-7">
+					<div class="datos">
+						<div id="nombreJ7"></div>
+						<div id="fichasJ7"></div>
 					</div>
-					<div id="nombreJ7">Jugador 7</div>
-					<div id="fichasJ7"></div>
+					<div id="J7">
+						<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+						<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
+					</div>
+
 					<div id="totalApostadoJ7"></div>
 				</div>
 				<div class="player player-8">
-					<div id="J8">
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-						<div class="card-small">
-							<img src='img/baraja/card_back.svg' alt='Carta' width='40px'>
-						</div>
-					</div>
-					<div id="nombreJ8">Jugador 8</div>
+					<div id="nombreJ8"></div>
 					<div id="fichasJ8"></div>
+					<div id="J8">
+						<!-- <img src="img/baraja/card_back.svg" alt="Carta" width="45px">
+						<img src="img/baraja/card_back.svg" alt="Carta" width="45px"> -->
+					</div>
+
 					<div id="totalApostadoJ8"></div>
 				</div>
-
-
 			</div>
 		</div>
 	</div>
-	<div id="pruebas"></div>
+
+	<div class="chat">
+		<!--<div>
+			<label>Nombre:</label>
+			<input type="text" id="usuario" placeholder="Usuario">
+		</div>-->
+		<div id="conversacion">
+
+		</div>
+		<div>
+			<textarea id="mensaje" placeholder="Escribe un mensaje"></textarea>
+		</div>
+		<div>
+			<button id="btnEnviar">Enviar</button>
+		</div>
+
+	</div>
+	<div class="botones">
+		<form action="" name="jugada" method="POST">
+			<input type="number" id="apuesta" name="apuesta" value="50" oninput="rangeApuesta.value=apuesta.value"
+				min="1" max="200">
+			<input type="range" id="rangeApuesta" name="rangeApuesta" min="1" max="200" step="1"
+				oninput="apuesta.value=rangeApuesta.value">
+			<div class="jugadas">
+				<input type="button" id="fold" name="fold" value="Fold">
+				<input type="button" id="call" name="call" value="Call">
+				<input type="button" id="raise" name="raise" value="Raise">
+				<!-- <input type="text" id="id_usuario" name="id_usuario" value="2">
+				<input type="button" id="empezar" name="empezar" value="Empezar"> -->
+			</div>
+
+		</form>
+	</div>
+
+
+	<!--<div id="bote"></div>-->
+	<div id="mesa"></div>
+	<!--<div id="flop"></div>-->
+	<!--<div id="div1"></div>
+	<div id="div2"></div>
+	<div id="div3"></div>
+	<div id="div4"></div>
+	<div id="div5"></div>
+	<div id="pruebas"></div>-->
 	<script src="js/websocket.js"></script>
 </body>
 

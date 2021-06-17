@@ -905,7 +905,7 @@ public class Juego {
 		Connection con = bd.ConexionBD.abrirConexion();
 		try {
 			Statement st = con.createStatement();
-			String consulta = "UPDATE Usuarios SET fichas = 100 WHERE fichas = 0";
+			String consulta = "UPDATE Usuarios SET fichas = 100 WHERE fichas <= 0";
 			st.executeUpdate(consulta);
 			st.close();
 		} catch (SQLException e) {

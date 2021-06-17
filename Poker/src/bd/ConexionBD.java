@@ -12,7 +12,7 @@ public class ConexionBD {
 	public static Connection abrirConexion() {
 		Connection con = null;
 		try {
-			String url = "jdbc:mysql://localhost:3306/Poker?serverTimezone=UTC";
+			String url = "jdbc:mysql://localhost:3306/lportal?serverTimezone=UTC";
 
 		Properties props = new Properties();
 

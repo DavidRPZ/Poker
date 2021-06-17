@@ -12,10 +12,12 @@
 		numJugadores = 0,
 		rondaEmpezada = false,
 		esHost = "false",
+		permitir = true,
 		idUsuarios = [],
 		copiaIdUsuarios = [],
 		nombresJugadores = [],
 		fichasJugadores = [],
+		idsPredefinidos = ["37933", "37955", "37973", "37991", "38009", "38027", "38045", "38063"],
 		empieza = 0,
 		empieza2 = 0,
 		turno = empieza,
@@ -46,24 +48,24 @@
 	ws.onclose = onClose;
 	ws.onmessage = onMessage;
 	boton.addEventListener('click', enviar);
+	document.getElementById("btnEnviar").disabled = true;
 
 	function onOpen() {
 		console.log('Conectado a WebSocket');
 		foldBtn.disabled = true;
 		callBtn.disabled = true;
 		raiseBtn.disabled = true;
-		/*if (window.sessionStorage) {
-			sessionStorage.setItem("id_usuario", document.getElementById('id_usuario').value);
+		if (window.sessionStorage) {
 			sessionStorage.setItem("id_sala", "1");
 		}
 		if (!rondaEmpezada) {
-			comprobarRondaEmpezada();
-		}*/
+			nuevoJugador();
+		}
 	}
 
 	function onClose() {
 		console.log('Desconectado de WebSocket');
-		borrarJugadores();
+		//borrarJugadores();
 	}
 
 	function enviar() {
@@ -71,7 +73,9 @@
 			accion: "chat",
 			id_usuario: sessionStorage.getItem("id_usuario"),
 			id_sala: sessionStorage.getItem("id_sala"),
-			nombre: nombre.value,
+			//nombre: nombre.value,
+			//nombre: sessionStorage.getItem("id_usuario"),
+			nombre: sessionStorage.getItem("nombre_usuario"),
 			mensaje: mensaje.value
 		};
 
@@ -83,10 +87,11 @@
 		switch (obj.accion) {
 			case "chat":
 				var d = new Date(),
-					msg1 = '<b style="color:red;">' + d.getHours() + ':' + d.getMinutes() + '</b> - ',
-					msg2 = '<b style="color:green;">' + obj.nombre + ': </b>',
-					msg3 = '<b style="color:blue;">' + obj.mensaje + '</b>';
+					msg1 = '<b>' + d.getHours() + ':' + d.getMinutes() + '</b> - ',
+					msg2 = '<b>' + obj.nombre + ': </b>',
+					msg3 = '<b>' + obj.mensaje + '</b>';
 				mensajes.innerHTML += msg1 + msg2 + msg3 + '<br>';
+				mensajes.scrollTop = mensajes.scrollHeight;
 				break;
 
 			case "empezarRonda":
@@ -96,6 +101,7 @@
 				empieza = parseFloat(obj.empieza);
 				turno = empieza;
 				esHost = "false";
+				//esHost = "false";
 				//sleep(40);
 				host();
 				break;
@@ -105,9 +111,9 @@
 						var msg1 = obj.flop1,
 							msg2 = obj.flop2,
 							msg3 = obj.flop3;
-						flop.innerHTML = "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='40px'>";
-						flop.innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='40px'>";
-						flop.innerHTML += "<img src='img/baraja/" + msg3 + ".svg' alt='Carta' width='40px'>";
+						flop.innerHTML = "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='45px'>";
+						flop.innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='45px'>";
+						flop.innerHTML += "<img src='img/baraja/" + msg3 + ".svg' alt='Carta' width='45px'>";
 
 					}, 100);
 				}
@@ -116,7 +122,7 @@
 				if (!rondaEmpezada) {
 					setTimeout(function() {
 						var msg = obj.turn;
-						flop.innerHTML += "<img src='img/baraja/" + msg + ".svg' alt='Carta' width='40px'>";
+						flop.innerHTML += "<img src='img/baraja/" + msg + ".svg' alt='Carta' width='45px'>";
 					}, 100);
 				}
 				break;
@@ -124,7 +130,7 @@
 				if (!rondaEmpezada) {
 					setTimeout(function() {
 						var msg = obj.river
-						flop.innerHTML += "<img src='img/baraja/" + msg + ".svg' alt='Carta' width='40px'><br>";
+						flop.innerHTML += "<img src='img/baraja/" + msg + ".svg' alt='Carta' width='45px'><br>";
 					}, 100);
 
 				}
@@ -141,62 +147,119 @@
 					fichasJugadores.push(obj.F1);
 					fichasJugadores.push(obj.F2);
 
-					document.getElementById("nombreJ1").innerHTML = "id: " + obj.J1 + ", nombre: " + obj.nombre1 + "<br>";
-					document.getElementById("fichasJ1").innerHTML = "fichas: " + obj.F1 + "<br>";
-					document.getElementById("nombreJ2").innerHTML = "id: " + obj.J2 + ", nombre: " + obj.nombre2 + "<br>";
-					document.getElementById("fichasJ2").innerHTML = "fichas: " + obj.F2 + "<br>";
+					document.getElementById("nombreJ1").innerHTML = obj.nombre1;
+					document.getElementById("fichasJ1").innerHTML = 'Fichas: ' + obj.F1;
+					document.getElementById("J1").style.display = 'block';
+					document.getElementById("fichasJ1").style.display = 'block';
+					document.getElementById("nombreJ1").style.display = 'block';
+					document.getElementById("nombreJ2").innerHTML = obj.nombre2;
+					document.getElementById("fichasJ2").innerHTML = 'Fichas: ' + obj.F2;
+					document.getElementById("J2").style.display = 'block';
+					document.getElementById("fichasJ2").style.display = 'block';
+					document.getElementById("nombreJ2").style.display = 'block';
 					if (obj.J3 != undefined) {
-						document.getElementById("nombreJ3").innerHTML = "id: " + obj.J3 + ", nombre: " + obj.nombre3 + "<br>";
-						document.getElementById("fichasJ3").innerHTML = "fichas: " + obj.F3 + "<br>";
+						document.getElementById("nombreJ3").innerHTML = obj.nombre3;
+						document.getElementById("fichasJ3").innerHTML = 'Fichas: ' + obj.F3;
+						document.getElementById("J3").style.display = 'block';
+						document.getElementById("fichasJ3").style.display = 'block';
+						document.getElementById("nombreJ3").style.display = 'block';
 						idUsuarios.push(obj.J3);
 						nombresJugadores.push(obj.nombre3);
 						fichasJugadores.push(obj.F3);
 					}
+					else {
+						document.getElementById("J3").style.display = 'none';
+						document.getElementById("fichasJ3").style.display = 'none';
+						document.getElementById("nombreJ3").style.display = 'none';
+					}
 					if (obj.J4 != undefined) {
-						document.getElementById("nombreJ4").innerHTML = "id: " + obj.J4 + ", nombre: " + obj.nombre4 + "<br>";
-						document.getElementById("fichasJ4").innerHTML = "fichas: " + obj.F4 + "<br>";
+						document.getElementById("nombreJ4").innerHTML = obj.nombre4;
+						document.getElementById("fichasJ4").innerHTML = 'Fichas: ' + obj.F4;
+						document.getElementById("J4").style.display = 'block';
+						document.getElementById("fichasJ4").style.display = 'block';
+						document.getElementById("nombreJ4").style.display = 'block';
 						idUsuarios.push(obj.J4);
 						nombresJugadores.push(obj.nombre4);
 						fichasJugadores.push(obj.F4);
 					}
+					else {
+						document.getElementById("J4").style.display = 'none';
+						document.getElementById("fichasJ4").style.display = 'none';
+						document.getElementById("nombreJ4").style.display = 'none';
+					}
 					if (obj.J5 != undefined) {
-						document.getElementById("nombreJ5").innerHTML = "id: " + obj.J5 + ", nombre: " + obj.nombre5 + "<br>";
-						document.getElementById("fichasJ5").innerHTML = "fichas: " + obj.F5 + "<br>";
+						document.getElementById("nombreJ5").innerHTML = obj.nombre5;
+						document.getElementById("fichasJ5").innerHTML = 'Fichas: ' + obj.F5;
+						document.getElementById("J5").style.display = 'block';
+						document.getElementById("fichasJ5").style.display = 'block';
+						document.getElementById("nombreJ5").style.display = 'block';
 						idUsuarios.push(obj.J5);
 						nombresJugadores.push(obj.nombre5);
 						fichasJugadores.push(obj.F5);
 					}
+					else {
+						document.getElementById("J5").style.display = 'none';
+						document.getElementById("fichasJ5").style.display = 'none';
+						document.getElementById("nombreJ5").style.display = 'none';
+					}
 					if (obj.J6 != undefined) {
-						document.getElementById("nombreJ6").innerHTML = "id: " + obj.J6 + ", nombre: " + obj.nombre6 + "<br>";
-						document.getElementById("fichasJ6").innerHTML = "fichas: " + obj.F6 + "<br>";
+						document.getElementById("nombreJ6").innerHTML = obj.nombre6;
+						document.getElementById("fichasJ6").innerHTML = 'Fichas: ' + obj.F6;
+						document.getElementById("J6").style.display = 'block';
+						document.getElementById("fichasJ6").style.display = 'block';
+						document.getElementById("nombreJ6").style.display = 'block';
 						idUsuarios.push(obj.J6);
 						nombresJugadores.push(obj.nombre6);
 						fichasJugadores.push(obj.F6);
 					}
+					else {
+						document.getElementById("J6").style.display = 'none';
+						document.getElementById("fichasJ6").style.display = 'none';
+						document.getElementById("nombreJ6").style.display = 'none';
+					}
 					if (obj.J7 != undefined) {
-						document.getElementById("nombreJ7").innerHTML = "id: " + obj.J7 + ", nombre: " + obj.nombre7 + "<br>";
-						document.getElementById("fichasJ7").innerHTML = "fichas: " + obj.F7 + "<br>";
+						document.getElementById("nombreJ7").innerHTML = obj.nombre7;
+						document.getElementById("fichasJ7").innerHTML = 'Fichas: ' + obj.F7;
+						document.getElementById("J7").style.display = 'block';
+						document.getElementById("fichasJ7").style.display = 'block';
+						document.getElementById("nombreJ7").style.display = 'block';
 						idUsuarios.push(obj.J7);
 						nombresJugadores.push(obj.nombre7);
 						fichasJugadores.push(obj.F7);
 					}
+					else {
+						document.getElementById("J7").style.display = 'none';
+						document.getElementById("fichasJ7").style.display = 'none';
+						document.getElementById("nombreJ7").style.display = 'none';
+					}
 					if (obj.J8 != undefined) {
-						document.getElementById("nombreJ8").innerHTML = "id: " + obj.J8 + ", nombre: " + obj.nombre8 + "<br>";
-						document.getElementById("fichasJ8").innerHTML = "fichas: " + obj.F8 + "<br>";
+						document.getElementById("nombreJ8").innerHTML = obj.nombre8;
+						document.getElementById("fichasJ8").innerHTML = 'Fichas: ' + obj.F8;
+						document.getElementById("J8").style.display = 'block';
+						document.getElementById("fichasJ8").style.display = 'block';
+						document.getElementById("nombreJ8").style.display = 'block';
 						idUsuarios.push(obj.J8);
 						nombresJugadores.push(obj.nombre8);
 						fichasJugadores.push(obj.F8);
 					}
+					else {
+						document.getElementById("J8").style.display = 'none';
+						document.getElementById("fichasJ8").style.display = 'none';
+						document.getElementById("nombreJ8").style.display = 'none';
+					}
 					bote = ciega_pequena + ciega_grande;
 					numUsuarios = idUsuarios.length;
 					copiaIdUsuarios = idUsuarios;
+					document.getElementById("btnEnviar").disabled = false;
+
 					var pos;
 					for (var i = 0; i < numUsuarios; i++) {
-						document.getElementById("J" + (i + 1)).innerHTML = "<img src='img/baraja/card_back.svg' alt='Carta' width='40px'><img src='img/baraja/card_back.svg' alt='Carta' width='40px'>";
+						document.getElementById("J" + (i + 1)).innerHTML = "<img src='img/baraja/card_back.svg' alt='Carta' width='45px'><img src='img/baraja/card_back.svg' alt='Carta' width='45px'>";
 						if (sessionStorage.getItem("id_usuario") == idUsuarios[i]) {
 							pos = i;
 						}
 					}
+					sessionStorage.setItem("nombre_usuario", nombresJugadores[pos]);
 					setTimeout(function() {
 						//sleep(100);
 						juego(pos);
@@ -207,6 +270,12 @@
 			case "fold":
 				if (!rondaEmpezada) {
 					clearInterval(cuentaAtras);
+					document.getElementById("nombreJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("totalApostadoJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("fichasJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("nombreJ" + (turno + 1)).style.color = "black";
+					document.getElementById("totalApostadoJ" + (turno + 1)).style.color = "black";
+					document.getElementById("fichasJ" + (turno + 1)).style.color = "black";
 					turno++;
 					var encontrado = idUsuarios.indexOf(obj.id_user);
 
@@ -217,12 +286,19 @@
 					numUsuarios--;
 					empieza2++;
 					//document.getElementById("J8").innerHTML += idUsuarios;
+
 					turnos();
 				}
 				break;
 			case "call":
 				if (!rondaEmpezada) {
 					clearInterval(cuentaAtras);
+					document.getElementById("nombreJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("totalApostadoJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("fichasJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("nombreJ" + (turno + 1)).style.color = "black";
+					document.getElementById("totalApostadoJ" + (turno + 1)).style.color = "black";
+					document.getElementById("fichasJ" + (turno + 1)).style.color = "black";
 					turno++;
 					var msg1 = obj.id_usuario,
 						msg2 = parseFloat(obj.apuesta);
@@ -251,13 +327,18 @@
 							document.getElementById("totalApostadoJ" + (posicion2 + 1)).innerHTML = totalApostado2;
 						}
 					}
-
 					turnos();
 				}
 				break;
 			case "raise":
 				if (!rondaEmpezada) {
 					clearInterval(cuentaAtras);
+					document.getElementById("nombreJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("totalApostadoJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("fichasJ" + (turno + 1)).style.borderColor = "black";
+					document.getElementById("nombreJ" + (turno + 1)).style.color = "black";
+					document.getElementById("totalApostadoJ" + (turno + 1)).style.color = "black";
+					document.getElementById("fichasJ" + (turno + 1)).style.color = "black";
 					turno++;
 					var msg1 = obj.id_usuario,
 						msg2 = parseFloat(obj.apuesta);
@@ -305,7 +386,7 @@
 						}
 					}
 
-					mensajes.innerHTML = str;
+					document.getElementById("tiempo").innerHTML = str;
 					setTimeout(function() {
 						rondaTerminada();
 					}, 6000);
@@ -323,11 +404,11 @@
 							prop = "J" + idUsuarios[i] + "C1";
 							msg1 = obj[prop];
 							//msg1 = obj["J" + idUsuarios[i] + "C1"];
-							document.getElementById("J" + (i + 1)).innerHTML = "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='40px'>";
+							document.getElementById("J" + (i + 1)).innerHTML = "<img src='img/baraja/" + msg1 + ".svg' alt='Carta' width='45px'>";
 							prop = "J" + idUsuarios[i] + "C2";
 							msg2 = obj[prop];
 							//msg2 = obj["J" + idUsuarios[i] + "C2"];
-							document.getElementById("J" + (i + 1)).innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='40px'><br>";
+							document.getElementById("J" + (i + 1)).innerHTML += "<img src='img/baraja/" + msg2 + ".svg' alt='Carta' width='45px'><br>";
 						}
 					}
 					numGanadores = parseFloat(obj.numGanadores)
@@ -338,13 +419,13 @@
 						prop = "G" + (i + 1);
 						for (var j = 0; j < nombresJugadores.length; j++) {
 							if (idUsuarios[j] == obj[prop]) {
-								str += nombresJugadores[j]  + ", ";
+								str += nombresJugadores[j] + ", ";
 							}
 						}
 
 					}
-					str = str.substr(0, str.length - 3) + " con " + obj.jugadaGanadora;
-					mensajes.innerHTML = str;
+					str = str.substr(0, str.length - 2) + " con " + obj.jugadaGanadora;
+					document.getElementById("tiempo").innerHTML = str;
 
 					//sleep(6000);
 					setTimeout(function() {
@@ -367,6 +448,7 @@
 						copiaIdUsuarios = [],
 						nombresJugadores = [],
 						fichasJugadores = [],
+						permitir = false,
 						turno = empieza,
 						esFlop = false,
 						esTurn = false,
@@ -396,7 +478,7 @@
 					//sleep(100);
 					setTimeout(function() {
 						if (esHost == "true") {
-							comprobarRondaEmpezada();
+							nuevoJugador();
 						}
 					}, 100);
 
@@ -470,6 +552,15 @@
 							callBtn.disabled = false;
 							raiseBtn.disabled = false;
 						}
+
+						document.getElementById("nombreJ" + (turno + 1)).style.borderColor = "red";
+						document.getElementById("totalApostadoJ" + (turno + 1)).style.borderColor = "red";
+						document.getElementById("fichasJ" + (turno + 1)).style.borderColor = "red";
+						document.getElementById("nombreJ" + (turno + 1)).style.color = "red";
+						document.getElementById("totalApostadoJ" + (turno + 1)).style.color = "red";
+						document.getElementById("fichasJ" + (turno + 1)).style.color = "red";
+
+
 						for (var i = 0; i < idUsuarios.length; i++) {
 							if (document.getElementById("totalApostadoJ" + (i + 1)).textContent != undefined) {
 								if (idUsuarios[i] != "0" && document.getElementById("totalApostadoJ" + (i + 1)).textContent != apuestaMasGrande) {
@@ -557,7 +648,7 @@
 		tiempo = 20;
 		cuentaAtras = setInterval(function() {
 			if (tiempo > 0) {
-				$('#div5').html("Tiempo restante: " + tiempo);
+				$('#tiempo').html("Tiempo restante: " + tiempo);
 				tiempo--;
 			} else {
 				if (idUsuarios[turno] == sessionStorage.getItem("id_usuario")) {
@@ -577,8 +668,11 @@
 			id_sala: sessionStorage.getItem("id_sala")
 		}, function(responseText) {
 			var cartas = responseText.split("@");
-			document.getElementById("J" + (pos + 1)).innerHTML = "<img src='img/baraja/" + cartas[0] + ".svg' alt='Carta' width='40px'>";
-			document.getElementById("J" + (pos + 1)).innerHTML += "<img src='img/baraja/" + cartas[1] + ".svg' alt='Carta' width='40px'>";
+			document.getElementById("J" + (pos + 1)).innerHTML = "<img src='img/baraja/" + cartas[0] + ".svg' alt='Carta' width='45px'>";
+			document.getElementById("J" + (pos + 1)).innerHTML += "<img src='img/baraja/" + cartas[1] + ".svg' alt='Carta' width='45px'>";
+			document.getElementById("J" + (pos + 1)).style.display = 'block';
+			document.getElementById("fichasJ" + (pos + 1)).style.display = 'block';
+			document.getElementById("nombreJ" + (pos + 1)).style.display = 'block';
 			turnos();
 		});
 	}
@@ -594,6 +688,7 @@
 	}
 
 	function host() {
+		esHost = "false";
 		var accion = "host";
 		empieza += "";
 		$.post("ServletControlador", {
@@ -617,6 +712,7 @@
 		});
 	}
 
+	//comprobarRondaEmpezada -> nuevoJugador -> comprobarNumJugadores -> empezarRonda -> host -> todosUsuarios -> juego
 	function comprobarGanador() {
 		if (esHost == "true") {
 			bote += "";
@@ -649,14 +745,27 @@
 			id_usuario: sessionStorage.getItem("id_usuario"),
 			id_sala: sessionStorage.getItem("id_sala"),
 		}, function(responseText) { //La respuesta es el número de jugadores
-			numJugadores = responseText;
-			comprobarNumJugadores();
+			numJugadores = parseFloat(responseText);
+			//alert(sessionStorage.getItem("id_usuario"));
+			if (sessionStorage.getItem("id_usuario") == "undefined" || sessionStorage.getItem("id_usuario") == undefined || sessionStorage.getItem("id_usuario") == "") {
+				sessionStorage.setItem("id_usuario", idsPredefinidos[numJugadores - 1]);
+			}
+			if (numJugadores > 1 && numJugadores <= 8) {
+				comprobarRondaEmpezada();
+			} else {
+				if (numJugadores < 2) {
+					$('#bote').html("Esperando mas jugadores...");
+					borrarJugadores();
+				}
+				else {
+					$('#bote').html("Se ha alcanzado el maximo de jugadores...");
+				}
+			}
 		});
 	}
 
 	function comprobarNumJugadores() {
-		if (numJugadores > 1 && numJugadores < 8) {
-			//$('#div1').html('Numero de jugadores: ' + numJugadores);
+		if (permitir || esHost == "true") {
 			empieza += "";
 			var msg = {
 				accion: "empezarRonda",
@@ -665,14 +774,6 @@
 				empieza: empieza
 			};
 			ws.send(JSON.stringify(msg));
-
-		} else {
-			if (numJugadores < 2) {
-				$('#div1').html("Esperando mas jugadores...");
-			}
-			else {
-				$('#div1').html("Se ha alcanzado el máximo de jugadores...");
-			}
 		}
 	}
 
@@ -691,7 +792,7 @@
 				rondaEmpezada = true;
 			}
 			if (!rondaEmpezada) {
-				nuevoJugador();
+				comprobarNumJugadores();
 			} else {
 				$('#bote').html("Ya existe una partida en curso... Espera a que termine esta ronda para poder jugar");
 			}
@@ -735,7 +836,9 @@
 
 	function rondaTerminada() {
 		if (esHost == "true") {
+			//setTimeout(function() {
 			borrarJugadores();
+			//}, 100);
 			var msg = {
 				accion: "rondaTerminada",
 				id_usuario: sessionStorage.getItem("id_usuario"),
@@ -747,14 +850,12 @@
 
 	function borrarJugadores() {
 		var accion = "borrarJugadores";
-		if (esHost == "true") {
-			$.post("ServletControlador", {
-				accion: accion,
-				id_sala: sessionStorage.getItem("id_sala"),
-			}, function(responseText) {
-				//console.log("Sala cerrada");
-			});
-		}
+		$.post("ServletControlador", {
+			accion: accion,
+			id_sala: sessionStorage.getItem("id_sala"),
+		}, function(responseText) {
+			//console.log("Sala cerrada");
+		});
 
 	}
 
@@ -779,7 +880,6 @@
 				mensajes.innerHTML += "La apuesta es demasiado pequeña..."
 			}
 			else {
-
 				foldBtn.disabled = true;
 				callBtn.disabled = true;
 				raiseBtn.disabled = true;
@@ -787,14 +887,14 @@
 			}
 		}
 	});
-	$("#empezar").click(function() {
+	/*$("#empezar").click(function() {
 		if (window.sessionStorage) {
 			sessionStorage.setItem("id_usuario", document.getElementById('id_usuario').value);
 			sessionStorage.setItem("id_sala", "1");
 		}
 		if (!rondaEmpezada) {
-			comprobarRondaEmpezada();
+			nuevoJugador();
 		}
-	});
+	});*/
 
 })(window, document, JSON);
